@@ -213,7 +213,7 @@ namespace UIscrcpy
                 Shell.Async_Comand("scrcpy_Connect_Wifi", "\\scrcpy.exe", " --serial=" + Setting.Main.select_Device_Info.IP_Adress + ":5555" + scrcpy_Option());
 
                 // デバイスを切断
-                Shell.Comand(Setting.Main.scrcpy_path + "\\adb.exe", "disconnect");
+                Shell.Async_Comand("ADB_Disconnect","\\adb.exe", " disconnect");
             }
         }
 

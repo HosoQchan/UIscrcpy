@@ -169,7 +169,7 @@ namespace UIscrcpy
                     device_info = Form_Device_Connection2.device_Info;
 
                     // デバイスを切断
-                    Shell.Comand(Setting.Main.scrcpy_path + "\\adb.exe", "disconnect");
+                    Shell.Async_Comand("ADB_Disconnect","\\adb.exe", " disconnect");
                     if (Form_Device_Connection2.Error)
                     {
                         Start_Page1();

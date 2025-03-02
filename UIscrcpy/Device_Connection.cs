@@ -67,26 +67,22 @@ namespace UIscrcpy
             this.Refresh();
 
             Match mh;
-            string result = "";
             string Serial = "";
        
-            Debug.WriteLine("--ttttttttttttt");
-            Debug.WriteLine(Setting.Main.Device_List[0].Model_Name);
-
             Shell Shell = new Shell();
             switch (Mode)
             {
                 // ＩＰアドレスの取得
                 case 0:
                     // デバイスを切断
-                    Shell.Comand(Setting.Main.scrcpy_path + "\\adb.exe", "disconnect");
+                    Shell.Async_Comand("ADB_Disconnect","\\adb.exe", " disconnect");
 
                     // デバイスを表示
-                    result = Shell.Comand(Setting.Main.scrcpy_path + "\\adb.exe", "devices -l");
+                    Shell.Async_Comand("ADB_Devices_List","\\adb.exe", " devices -l");
                     Debug.WriteLine("デバイスを表示 --start");
-                    Debug.WriteLine(result);
+                    Debug.WriteLine(Shell.Output_Results);
                     Debug.WriteLine("デバイスを表示 --end");
-                    mh = Regex.Match(result, @"\r\n(?<Id>.+)device product:(?<Product>.*)model:(?<Model>.*)device:.*", RegexOptions.None);
+                    mh = Regex.Match(Shell.Output_Results, @"\r\n(?<Id>.+)device product:(?<Product>.*)model:(?<Model>.*)device:.*", RegexOptions.None);
                     if (!mh.Success)
                     {
                         // エラーメッセージを表示する
@@ -101,21 +97,14 @@ namespace UIscrcpy
                     device_Info.Model_Name = mh.Groups["Model"].Value.Trim();
                     device_Info.IP_Adress = "";
 
-                    Debug.WriteLine("--ttttttttttttt");
-                    Debug.WriteLine(Setting.Main.Device_List[0].Model_Name);
-
                     // TCPIP接続に切り替える
-                    Shell.Comand(Setting.Main.scrcpy_path + "\\adb.exe", "tcpip 5555");
-                    Debug.WriteLine("TCPIP接続に切り替え");
-
+                    Shell.Async_Comand("ADB_Tcpip","\\adb.exe", " tcpip 5555");
 
                     // IPアドレスを取得
                     Thread.Sleep(1000);
-                    Shell.Process_Result = "";
-                    Shell.Async_Comand("ADB_IP_Address", "\\adb.exe", "shell ip addr show wlan0");
-
+                    Shell.Async_Comand("ADB_IP_Address", "\\adb.exe", " shell ip addr show wlan0");
                     Debug.WriteLine("------- ip adress -------");
-                    device_Info.IP_Adress = Shell.Process_Result;
+                    device_Info.IP_Adress = Shell.Async_Output;
                     Debug.WriteLine(device_Info.IP_Adress);
                     Debug.WriteLine("------- ip adress -------");
                     this.Close();
@@ -124,18 +113,14 @@ namespace UIscrcpy
                 // Wifi接続
                 case 1:
                     // TCPIP接続に切り替える
-                    Shell.Comand(Setting.Main.scrcpy_path + "\\adb.exe", "tcpip 5555");
-                    Debug.WriteLine("TCPIP接続に切り替え");
+                    Shell.Async_Comand("ADB_Tcpip","\\adb.exe", " tcpip 5555");
 
                     // デバイスを切断
-                    result = Shell.Comand(Setting.Main.scrcpy_path + "\\adb.exe", "disconnect");
+                    Shell.Async_Comand("ADB_Disconnect","\\adb.exe", " disconnect");
 
                     // デバイスを接続
-                    result = Shell.Comand(Setting.Main.scrcpy_path + "\\adb.exe", "connect " + Setting.Main.select_Device_Info.IP_Adress + ":5555");
-                    Debug.WriteLine("デバイスを接続 --start");
-                    Debug.WriteLine(result);
-                    Debug.WriteLine("デバイスを接続 --end");
-                    mh = Regex.Match(result, @"connected to.*", RegexOptions.None);
+                    Shell.Async_Comand("ADB_Connect","\\adb.exe", " connect " + Setting.Main.select_Device_Info.IP_Adress + ":5555");
+                    mh = Regex.Match(Shell.Output_Results, @"connected to.*", RegexOptions.None);
                     if (!mh.Success)
                     {
                         // エラーメッセージを表示する
@@ -154,15 +139,11 @@ namespace UIscrcpy
                 // アプリの取得
                 case 3:
                     // デバイスを切断
-                    Shell.Comand(Setting.Main.scrcpy_path + "\\adb.exe", "disconnect");
+                    Shell.Async_Comand("ADB_Disconnect","\\adb.exe", " disconnect");
 
                     // デバイスを表示
-                    result = Shell.Comand(Setting.Main.scrcpy_path + "\\adb.exe", "devices -l");
-                    Debug.WriteLine("デバイスを表示 --start");
-                    Debug.WriteLine(result);
-                    Debug.WriteLine("デバイスを表示 --end");
-
-                    mh = Regex.Match(result, @"\r\n(?<Id>.+)device product:(?<Product>.*)model:(?<Model>.*)device:.*", RegexOptions.None);
+                    Shell.Async_Comand("ADB_Devices_List","\\adb.exe", " devices -l");
+                    mh = Regex.Match(Shell.Output_Results, @"\r\n(?<Id>.+)device product:(?<Product>.*)model:(?<Model>.*)device:.*", RegexOptions.None);
                     if (mh.Success)
                     {
                         string Model = mh.Groups["Model"].Value.Trim();
@@ -174,15 +155,11 @@ namespace UIscrcpy
                     else
                     {
                         // TCPIP接続に切り替える
-                        Shell.Comand(Setting.Main.scrcpy_path + "\\adb.exe", "tcpip 5555");
-                        Debug.WriteLine("TCPIP接続に切り替え--");
+                        Shell.Async_Comand("ADB_Tcpip","\\adb.exe", " tcpip 5555");
 
                         // デバイスを接続
-                        result = Shell.Comand(Setting.Main.scrcpy_path + "\\adb.exe", "connect " + Setting.Main.select_Device_Info.IP_Adress + ":5555");
-                        Debug.WriteLine("デバイスを接続 --start");
-                        Debug.WriteLine(result);
-                        Debug.WriteLine("デバイスを接続 --end");
-                        mh = Regex.Match(result, @"connected to.*", RegexOptions.None);
+                        Shell.Async_Comand("ADB_Connect","\\adb.exe", " connect " + Setting.Main.select_Device_Info.IP_Adress + ":5555");
+                        mh = Regex.Match(Shell.Output_Results, @"connected to.*", RegexOptions.None);
                         if (!mh.Success)
                         {
                             // エラーメッセージを表示する
@@ -194,13 +171,8 @@ namespace UIscrcpy
                         Serial = Setting.Main.select_Device_Info.IP_Adress + ":5555";
                     }
 
-                    result = Shell.Comand(Setting.Main.scrcpy_path + "\\scrcpy.exe", " --serial=" + Serial + " --list-app");
-                    GET_App_List(result);
-
-                    /*
-                    string test = Setting.Main.scrcpy_path + "adb.exe" + " -s " + Serial + " shell pm list packages -f";
-                    Shell.Async_Comand("ADB_List_Package", "adb.exe", " -s " + Serial + " shell pm list packages -f");
-                    */
+                    Shell.Async_Comand("scrcpy_App_List","\\scrcpy.exe", " --serial=" + Serial + " --list-app");
+                    GET_App_List(Shell.Output_Results);
                     this.Close();
                     break;
 
@@ -210,7 +182,7 @@ namespace UIscrcpy
                     for (int i = 0; i < Setting.Main.select_Device_Info.App_List.Count; ++i)
                     {
                         File_Name = Setting.Main.select_Device_Info.App_List[i].Package + ".png";
-                        File_Name = Setting.App_Data_Path + "\\App_Picture\\" + File_Name;
+                        File_Name = Setting.App_Data_Path + "App_Picture\\" + File_Name;
                         if (!File.Exists(File_Name))
                         {
                             App_Icon_Generator app_Icon_Generator = new App_Icon_Generator();

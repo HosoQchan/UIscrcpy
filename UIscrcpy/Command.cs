@@ -6,87 +6,25 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UIscrcpy
 {
-    public class bat_Create
-    {
-        string bat_data;
-
-
-        /*
-        public void adb_adress()
-        {
-            // 接続されているIPアドレスを表示する
-            bat_data = Setting.Main.scrcpy_path + "adb.exe shell ip addr show wlan0";
-            Encoding enc = Encoding.GetEncoding("UTF-8");
-            using (StreamWriter writer = new StreamWriter(Setting.bat_Path + "adb_adress.bat", false, enc))
-            {
-                writer.WriteLine(bat_data);
-            }
-        }
-        */
-
-
-    }
 
     public class Shell
     {
         public string Process_Name = "";
-        public string Process_Result = "";
-
-        public string Comand(string process_FileName, string Option)
-        {
-            string results = "";
-            if (!File.Exists(process_FileName))
-            {
-                return "ファイル[" + process_FileName + "]が見つかりません。";
-            }
-
-            // Processオブジェクトを作成
-            System.Diagnostics.Process p = new System.Diagnostics.Process();
-
-            // バッチファイルを起動する人は、cmd.exeさんなので
-            p.StartInfo.FileName = "cmd.exe";
-            // コマンド処理実行後、コマンドウィンドウ終わるようにする。
-            p.StartInfo.Arguments = "/c ";
-
-            // コマンドラインを指定
-            if (Option != "")
-            {
-                process_FileName = process_FileName + " " + Option;
-            }
-            p.StartInfo.Arguments = p.StartInfo.Arguments + process_FileName;
-
-            // エンコード指定
-            p.StartInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
-
-            // ウィンドウを表示しないようにする
-            p.StartInfo.CreateNoWindow = true;
-
-            // 出力を読み取れるようにする
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardInput = false;
-
-            // 起動
-            p.Start();
-
-            // 出力を読み取る
-            results = p.StandardOutput.ReadToEnd();
-
-            // プロセス終了まで待機する
-            // WaitForExitはReadToEndの後である必要がある
-            // (親プロセス、子プロセスでブロック防止のため)
-            p.WaitForExit();
-            p.Close();
-            return results;
-        }
+        public string Async_Output = "";
+        public string Async_Error = "";
+        public string Output_Results = "";
+        public string Error_Results = "";
 
         public void Async_Comand(string Name, string Command, string Option)
         {
             Process_Name = Name;
+            Kill_Process(Command.Replace("\\", ""));
+
             Command = Setting.Main.scrcpy_path + Command;
 
             var si = new ProcessStartInfo();
@@ -99,7 +37,7 @@ namespace UIscrcpy
             // コマンドラインを指定
             if (Option != "")
             {
-                Command = Command + " " + Option;
+                Command = Command + Option;
             }
             si.Arguments = si.Arguments + Command;
 
@@ -129,6 +67,10 @@ namespace UIscrcpy
 
                 // プロセスの開始
                 Debug.WriteLine($"Prosess_Start");
+                Output_Results = "";
+                Error_Results = "";
+                Async_Output = "";
+                Async_Error = "";
                 proc.Start();
                 Task.WaitAll(
                     Task.Run(() =>
@@ -140,6 +82,7 @@ namespace UIscrcpy
                             {
                                 break;
                             }
+                            Output_Results = Output_Results + Output + "\r\n";
                             Proc_StandardOutput(Process_Name,Output);
                         }
                         while (true)
@@ -149,6 +92,7 @@ namespace UIscrcpy
                             {
                                 break;
                             }
+                            Error_Results = Error_Results + Error + "\r\n";
                             Proc_StandardError(Process_Name,Error);
                         }
                     }),
@@ -156,6 +100,12 @@ namespace UIscrcpy
                     {
                         ctoken.Token.WaitHandle.WaitOne();
                         proc.WaitForExit();
+                        Debug.WriteLine("----- Output ----");
+                        Debug.WriteLine(Output_Results);
+                        Debug.WriteLine("----- Output ----");
+                        Debug.WriteLine("----- error ----");
+                        Debug.WriteLine(Error_Results);
+                        Debug.WriteLine("----- error ----");
                     })
                 );
             }
@@ -168,6 +118,14 @@ namespace UIscrcpy
             {
                 switch (Process_Name)
                 {
+                    case "ADB_Disconnect":
+                        break;
+                    case "ADB_Devices_List":
+                        break;
+                    case "ADB_Tcpip":
+                        break;
+                    case "ADB_Connect":
+                        break;
                     case "ADB_IP_Address":
                         Debug.WriteLine("Data Received -- ADB_IP_Address");
                         Debug.WriteLine(Data);
@@ -176,7 +134,7 @@ namespace UIscrcpy
                         mh = Regex.Match(Data, @Patturn, RegexOptions.None);
                         if (mh.Success)
                         {
-                            Process_Result = mh.Groups["Adress"].Value;
+                            Async_Output = mh.Groups["Adress"].Value;
                         }
                         break;
                     case "ADB_List_Package":
@@ -210,6 +168,22 @@ namespace UIscrcpy
             {
                 switch (Process_Name)
                 {
+                    case "ADB_Disconnect":
+                        Debug.WriteLine("Error Received -- ADB_Disconnect");
+                        Debug.WriteLine(Data);
+                        break;
+                    case "ADB_Devices_List":
+                        Debug.WriteLine("Error Received -- ADB_Devices_List");
+                        Debug.WriteLine(Data);
+                        break;
+                    case "ADB_Tcpip":
+                        Debug.WriteLine("Error Received -- ADB_Tcpip");
+                        Debug.WriteLine(Data);
+                        break;
+                    case "ADB_Connect":
+                        Debug.WriteLine("Error Received -- ADB_Connect");
+                        Debug.WriteLine(Data);
+                        break;
                     case "ADB_IP_Address":
                         Debug.WriteLine("Error Received -- ADB_IP_Address");
                         Debug.WriteLine(Data);
@@ -245,128 +219,33 @@ namespace UIscrcpy
                 }
             }
         }
-        /*
-        public void Async_Comand(string Name, string Command, string Option)
+
+        private void Kill_Process(string Process_Name)
         {
-            Process_Name = Name;
-            Command = Setting.Main.scrcpy_path + Command;
+            //notepadのプロセスを取得
+            System.Diagnostics.Process[] ps =
+                System.Diagnostics.Process.GetProcessesByName(Process_Name);
 
-            var si = new ProcessStartInfo();
-            // バッチファイルを起動する人は、cmd.exeさんなので
-            si.FileName = "cmd.exe";
-
-            // コマンド処理実行後、コマンドウィンドウ終わるようにする。
-            si.Arguments = "/c ";
-
-            // コマンドラインを指定
-            if (Option != "")
+            foreach (System.Diagnostics.Process p in ps)
             {
-                Command = Command + " " + Option;
-            }
-            si.Arguments = si.Arguments + Command;
+                //クローズメッセージを送信する
+                p.CloseMainWindow();
 
-            // エンコード指定
-            si.StandardOutputEncoding = System.Text.Encoding.UTF8;
-
-            // ウィンドウ表示を完全に消す
-            si.CreateNoWindow = true;
-
-            si.RedirectStandardError = true;
-            si.RedirectStandardOutput = true;
-
-            si.UseShellExecute = false;
-            using (var proc = new Process())
-            using (var ctoken = new CancellationTokenSource())
-            {
-                proc.EnableRaisingEvents = true;
-                proc.StartInfo = si;
-
-                // イベントハンドラを追加
-                proc.OutputDataReceived += p_OutputDataReceived;
-                proc.ErrorDataReceived += p_ErrorDataReceived;
-                proc.Exited += (sender, ev) =>
+                //プロセスが終了するまで最大1秒待機する
+                p.WaitForExit(1000);
+                //プロセスが終了したか確認する
+                if (p.HasExited)
                 {
-                    // プロセスが終了すると呼ばれる
-                    ctoken.Cancel();
-                };
-                // プロセスの開始
-                proc.Start();
-                // 非同期出力読出し開始
-                proc.BeginErrorReadLine();
-                proc.BeginOutputReadLine();
-                // 終了まで待つ
-                ctoken.Token.WaitHandle.WaitOne();
-            }
-        }
-
-        //OutputDataReceivedイベントハンドラ
-        //行が出力されるたびに呼び出される
-        private void p_OutputDataReceived(object sender, System.Diagnostics.DataReceivedEventArgs e)
-        {
-            string result = e.Data;
-            //出力された文字列を表示する
-            Debug.WriteLine("Data Received -- " + Process_Name + " start");
-            Debug.WriteLine(result);
-            Debug.WriteLine("Data Received -- " + Process_Name + " end");
-
-            Match mh;
-            if (!string.IsNullOrWhiteSpace(result))
-            {
-                switch (Process_Name)
+                    Debug.WriteLine(Process_Name + "が終了しました。");
+                }
+                else
                 {
-                    case "ADB_IP_Address":
-                        string Patturn = @"inet (?<Adress>\d+\.\d+\.\d+\.\d+)";
-                        mh = Regex.Match(result, @Patturn, RegexOptions.None);
-                        if (mh.Success)
-                        {
-                            Process_Result = mh.Groups["Adress"].Value;
-                        }
-                        break;
-                    case "ADB_List_Package":
-                        Debug.WriteLine("ADB_List_Package:" + result);
-                        break;
-                    case "scrcpy_App_List":
-                        Debug.WriteLine("scrcpy_App_List:" + result);
-                        break;
-                    case "scrcpy_Connect_USB":
-                        Debug.WriteLine("scrcpy_Connect_USB:" + result);
-                        break;
-                    case "scrcpy_Connect_Wifi":
-                        Debug.WriteLine("scrcpy_Connect_Wifi:" + result);
-                        break;
+                    Debug.WriteLine(Process_Name + "が終了しませんでした。");
                 }
             }
 
+
+
         }
-        //ErrorDataReceivedイベントハンドラ
-        private void p_ErrorDataReceived(object sender, System.Diagnostics.DataReceivedEventArgs e)
-        {
-            switch (Process_Name)
-            {
-                case "ADB_IP_Address":
-
-                    break;
-                case "ADB_List_Package":
-
-                    break;
-                case "scrcpy_App_List":
-
-                    break;
-                case "scrcpy_Connect_USB":
-
-                    break;
-                case "scrcpy_Connect_Wifi":
-
-                    break;
-            }
-
-
-
-            //エラー出力された文字列を表示する
-            Debug.WriteLine("Error Received -- " + Process_Name + " start");
-            Debug.WriteLine(e.Data);
-            Debug.WriteLine("Error Received -- " + Process_Name + " end");
-        }
-        */
     }
 }
