@@ -15,8 +15,8 @@ scrcpyはコマンド操作が基本であるため操作がやや分かりず�
 ・scrcpyがインストールしてある環境  
   
 # インストール方法  
-UIscrcpy.zipを適当な場所に解凍して、解凍してできたUIscrcpyディレクトリ下の"UIscrcpy.exe"を
-ダブルクリックで起動出来ます。  
+最新のUIscrcpy.zipを、https://github.com/HosoQchan/UIscrcpy/releases からダウンロードし、  適当な場所に解凍して下さい。  
+解凍してできたUIscrcpyディレクトリ下の"UIscrcpy.exe"をダブルクリックで起動出来ます。  
 尚、動作にはscrcpyが必要になりますので、こちらも予めインストールしておいて下さい。  
 ※scrcpyのインストール方法については本家を参照してください。  
   

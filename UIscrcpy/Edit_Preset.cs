@@ -110,6 +110,9 @@ namespace UIscrcpy
         private void Preset_Setting_Save(int Preset_No)
         {
             preset_item preset_item = new preset_item();
+            preset_item = Setting.Main.preset_list[Preset_No];
+
+            preset_item.preset_Name = TextBox_Preset_Name.Text;
             preset_item.windows_full_screen = CheckB_full_screen.Checked;
             preset_item.windows_borderless = CheckB_window_borderless.Checked;
             preset_item.windows_Disable_Screensaver = CheckB_Disable_Screensaver.Checked;
@@ -123,7 +126,6 @@ namespace UIscrcpy
 
             preset_item.Disable_Sleep = CheckB_Disable_Sleep.Checked;
             preset_item.Tap_Display = CheckB_Tap_Disp.Checked;
-
             Setting.Main.preset_list[Preset_No] = preset_item;
         }
 

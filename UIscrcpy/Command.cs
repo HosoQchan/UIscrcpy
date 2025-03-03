@@ -20,6 +20,93 @@ namespace UIscrcpy
         public string Output_Results = "";
         public string Error_Results = "";
 
+        public void Async_Comand2(string Name, string Command, string Option)
+        {
+            Process_Name = Name;
+            Kill_Process(Command.Replace("\\", ""));
+
+            Command = Setting.Main.scrcpy_path + Command;
+
+            var si = new ProcessStartInfo();
+            // バッチファイルを起動する人は、cmd.exeさんなので
+            si.FileName = "cmd.exe";
+
+            // コマンド処理実行後、コマンドウィンドウ終わるようにする。
+            si.Arguments = "/c ";
+
+            // コマンドラインを指定
+            if (Option != "")
+            {
+                Command = Command + Option;
+            }
+            si.Arguments = si.Arguments + Command;
+
+            // エンコード指定
+            si.StandardOutputEncoding = System.Text.Encoding.UTF8;
+
+            // ウィンドウ表示を完全に消す
+            si.CreateNoWindow = true;
+
+            si.RedirectStandardError = true;
+            si.RedirectStandardOutput = true;
+            
+            si.UseShellExecute = false;
+            using (var proc = new Process())
+            using (var ctoken = new CancellationTokenSource())
+            {
+                proc.EnableRaisingEvents = true;
+                proc.StartInfo = si;
+
+                // コールバックの設定
+                proc.Exited += (sender, ev) =>
+                {
+                    Debug.WriteLine($"Prosess_Exited");
+                    // プロセスが終了すると呼ばれる
+                    ctoken.Cancel();
+                };
+
+                // プロセスの開始
+                Debug.WriteLine($"Prosess_Start");
+                Output_Results = "";
+                Error_Results = "";
+                Async_Output = "";
+                Async_Error = "";
+                proc.Start();
+                //出力を読み取る
+//                string results = proc.StandardOutput.ReadToEnd();
+
+                Task.Run(() =>
+                {
+                    while (true)
+                    {
+                        string Output = proc.StandardOutput.ReadLine();
+                        if (Output == null)
+                        {
+                            break;
+                        }
+                        Output_Results = Output_Results + Output + "\r\n";
+                        Proc_StandardOutput(Process_Name, Output);
+                    }
+                    while (true)
+                    {
+                        string Error = proc.StandardError.ReadLine();
+                        if (Error == null)
+                        {
+                            break;
+                        }
+                        Error_Results = Error_Results + Error + "\r\n";
+                        Proc_StandardError(Process_Name, Error);
+                    }
+                });
+     
+                Task task2 = Task.Run(() =>
+                {
+                    ctoken.Token.WaitHandle.WaitOne();
+                    proc.WaitForExit();
+                });
+            }
+        }
+
         public void Async_Comand(string Name, string Command, string Option)
         {
             Process_Name = Name;
@@ -72,6 +159,7 @@ namespace UIscrcpy
                 Async_Output = "";
                 Async_Error = "";
                 proc.Start();
+
                 Task.WaitAll(
                     Task.Run(() =>
                     {
@@ -83,7 +171,7 @@ namespace UIscrcpy
                                 break;
                             }
                             Output_Results = Output_Results + Output + "\r\n";
-                            Proc_StandardOutput(Process_Name,Output);
+                            Proc_StandardOutput(Process_Name, Output);
                         }
                         while (true)
                         {
@@ -93,19 +181,13 @@ namespace UIscrcpy
                                 break;
                             }
                             Error_Results = Error_Results + Error + "\r\n";
-                            Proc_StandardError(Process_Name,Error);
+                            Proc_StandardError(Process_Name, Error);
                         }
                     }),
                     Task.Run(() =>
                     {
                         ctoken.Token.WaitHandle.WaitOne();
                         proc.WaitForExit();
-                        Debug.WriteLine("----- Output ----");
-                        Debug.WriteLine(Output_Results);
-                        Debug.WriteLine("----- Output ----");
-                        Debug.WriteLine("----- error ----");
-                        Debug.WriteLine(Error_Results);
-                        Debug.WriteLine("----- error ----");
                     })
                 );
             }
@@ -147,14 +229,15 @@ namespace UIscrcpy
                         Debug.WriteLine(Data);
 
                         break;
-                    case "scrcpy_Connect_USB":
-                        Debug.WriteLine("Data Received -- scrcpy_Connect_USB");
-                        Debug.WriteLine(Data);
-
-                        break;
-                    case "scrcpy_Connect_Wifi":
-                        Debug.WriteLine("Data Received -- scrcpy_Connect_Wifi");
-                        Debug.WriteLine(Data);
+                    case "scrcpy_Connect":
+                        Patturn = @"INFO:     -->";
+                        mh = Regex.Match(Data, @Patturn, RegexOptions.None);
+                        if (mh.Success)
+                        {
+                            Debug.WriteLine("-- scrcpy_Connect");
+                            Debug.WriteLine(Data);
+                        }
+                        
 
                         break;
                 }
@@ -199,22 +282,24 @@ namespace UIscrcpy
                         Debug.WriteLine(Data);
 
                         break;
-                    case "scrcpy_Connect_USB":
-                        Debug.WriteLine("Error Received -- scrcpy_Connect_USB");
+                    case "scrcpy_Connect":
+                        Debug.WriteLine("Error Received -- scrcpy_Connect");
                         Debug.WriteLine(Data);
 
-                        string Patturn = @"ERROR: Server connection failed";
+                        string Patturn = @"ERROR: Could not find ADB device ";
                         mh = Regex.Match(Data, @Patturn, RegexOptions.None);
                         if (mh.Success)
                         {
                             // エラーメッセージを表示する
-                            MessageBox.Show("接続を認識できませんでした。もう一度試してみてください。", "メッセージ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            MessageBox.Show("接続を認識できませんでした。", "メッセージ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         }
-                        break;
-                    case "scrcpy_Connect_Wifi":
-                        Debug.WriteLine("Error Received -- scrcpy_Connect_Wifi");
-                        Debug.WriteLine(Data);
-
+                        Patturn = @"ERROR: Server connection failed";
+                        mh = Regex.Match(Data, @Patturn, RegexOptions.None);
+                        if (mh.Success)
+                        {
+                            // エラーメッセージを表示する
+                            MessageBox.Show("接続を認識できませんでした。", "メッセージ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
                         break;
                 }
             }
@@ -222,7 +307,7 @@ namespace UIscrcpy
 
         private void Kill_Process(string Process_Name)
         {
-            //notepadのプロセスを取得
+            // プロセスを取得
             System.Diagnostics.Process[] ps =
                 System.Diagnostics.Process.GetProcessesByName(Process_Name);
 
@@ -243,9 +328,6 @@ namespace UIscrcpy
                     Debug.WriteLine(Process_Name + "が終了しませんでした。");
                 }
             }
-
-
-
         }
     }
 }

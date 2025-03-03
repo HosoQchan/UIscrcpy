@@ -19,13 +19,18 @@ namespace UIscrcpy
             this.Owner.Hide();
 
             Form_Loard = false;
+            /*
             Device_Connection Form_Device_Connection1 = new Device_Connection();
             Form_Device_Connection1.Mode = 3;
+            Form_Device_Connection1.device_Info = Setting.Main.select_Device_Info;
             Form_Device_Connection1.ShowDialog();
             if (Form_Device_Connection1.Error)
             {
                 this.Close();
             }
+            Setting.Main.select_Device_Info.App_List = Form_Device_Connection1.device_Info.App_List;
+            */
+
             ListView_App_List_Init();
             Form_Loard = true;
         }
@@ -60,16 +65,37 @@ namespace UIscrcpy
                 }
                 else
                 {
-                    img = Image.FromFile("C:\\Users\\hosoq\\source\\repos\\UIscrcpy\\UIscrcpy\\icon\\android_Icon.png");
+                    img = Image.FromFile(".\\icon\\android_Icon.png");
                 }
                 ImageList_Picture.Images.Add(img);
                 ListView_App_List.Items.Add(Setting.Main.select_Device_Info.App_List[i].Name, i);
+
+                if (App_Info.Name == Setting.Main.select_Device_Info.App_List[i].Name)
+                {
+                    ListView_App_List.Items[i].Selected = true;
+                }
+
                 //画像を破棄
                 if (img != null)
                 {
                     img.Dispose();
                 }
             }
+            ListView_App_List.Select();
+        }
+
+        private void Button_Get_App_Click(object sender, EventArgs e)
+        {
+            Device_Connection Form_Device_Connection1 = new Device_Connection();
+            Form_Device_Connection1.Mode = 3;
+            Form_Device_Connection1.device_Info = Setting.Main.select_Device_Info;
+            Form_Device_Connection1.ShowDialog();
+            if (Form_Device_Connection1.Error)
+            {
+                this.Close();
+            }
+            Setting.Main.select_Device_Info.App_List = Form_Device_Connection1.device_Info.App_List;
+            ListView_App_List_Init();
         }
 
         private void Button_Cancel_Click(object sender, EventArgs e)
@@ -85,11 +111,12 @@ namespace UIscrcpy
 
         private void Button_Get_Icon_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("アプリのアイコンをGllgle Playストアからダウンロードします。\r\nダウンロードにはインターネットへの接続と処理時間がかかります。\r\nよろしいですか？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+            DialogResult result = MessageBox.Show("アプリのアイコンをGoogle Playストアからダウンロードします。\r\nダウンロードにはインターネットへの接続と処理時間がかかります。\r\n続行しますか？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
             if (result == DialogResult.Yes)
             {
                 Device_Connection Form_Device_Connection1 = new Device_Connection();
                 Form_Device_Connection1.Mode = 4;
+                Form_Device_Connection1.device_Info = Setting.Main.select_Device_Info;
                 Form_Device_Connection1.ShowDialog();
 
                 ListView_App_List_Init();

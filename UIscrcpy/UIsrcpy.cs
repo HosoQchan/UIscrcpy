@@ -2,6 +2,8 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using MS.WindowsAPICodePack.Internal;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net;
+using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -15,14 +17,19 @@ namespace UIscrcpy
 {
     public partial class UIsrcpy : Form
     {
-        private Shell Shell = new Shell();
+        private const string GitHub_csproj_URL = "https://github.com/HosoQchan/UIscrcpy/blob/master/UIscrcpy/UIscrcpy.csproj";
+        static public string This_Version = "";
+        static public string GitHub_Version = "";
 
+        private Shell Shell = new Shell();
         private bool Form_Loard = false;
         private string Scrcpy_Folder = "";
 
         public UIsrcpy()
         {
             InitializeComponent();
+            this.Icon = new Icon(".\\icon\\UIscrcpy.ico");
+
             string key;
             for (int i = 0; i < Setting.preset.Count; i++)
             {
@@ -33,11 +40,25 @@ namespace UIscrcpy
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            This_Version = This_Ver();
+            GitHub_Version = GitHub_Ver(GitHub_csproj_URL);
+
             Setting setting = new Setting();
             setting.Setting_Main_Create();
             Setting_Init();
 
+            this.Shown += new EventHandler(Form_Shown);
             Form_Loard = true;
+        }
+
+        //Formが表示されたら発生するイベント
+        private void Form_Shown(object sender, EventArgs e)
+        {
+            if ((GitHub_Version == "") || (This_Version != GitHub_Version))
+            {
+                Form_Version form_Version = new Form_Version();
+                form_Version.ShowDialog();
+            }
         }
 
         private void Setting_Init()
@@ -88,8 +109,8 @@ namespace UIscrcpy
                 Button_WIFI_Start.Enabled = true;
             }
 
-            CheckB_App_Start.Checked = Setting.Main.select_Device_Info.App_Start;
             TextBox_App_Name.Text = Setting.Main.select_Device_Info.App_Start_Info.Name;
+            CheckB_App_Start.Checked = Setting.Main.select_Device_Info.App_Start;
             Select_App_Change();
             Form_Loard = true;
         }
@@ -100,6 +121,7 @@ namespace UIscrcpy
 
             if (TextBox_App_Name.Text == "")
             {
+                CheckB_App_Start.Checked = false;
                 CheckB_App_Start.Enabled = false;
             }
             else
@@ -190,6 +212,8 @@ namespace UIscrcpy
                 return;
             }
             Form_App_List form_App_List = new Form_App_List();
+            form_App_List.App_Info.Name = TextBox_App_Name.Text;
+
             form_App_List.ShowDialog(this);
             if (form_App_List.App_Info != null)
             {
@@ -204,16 +228,7 @@ namespace UIscrcpy
         {
             if (op_Start_Rec_Check())
             {
-                Device_Connection Form_Device_Connection2 = new Device_Connection();
-                Form_Device_Connection2.Mode = 1;
-                Form_Device_Connection2.ShowDialog();
-
-                // scrcpyを起動する
-                // TCPIP接続なので、"-e"オプションを付けて起動
-                Shell.Async_Comand("scrcpy_Connect_Wifi", "\\scrcpy.exe", " --serial=" + Setting.Main.select_Device_Info.IP_Adress + ":5555" + scrcpy_Option());
-
-                // デバイスを切断
-                Shell.Async_Comand("ADB_Disconnect","\\adb.exe", " disconnect");
+                Connection_Start("WIFI");
             }
         }
 
@@ -221,9 +236,35 @@ namespace UIscrcpy
         {
             if (op_Start_Rec_Check())
             {
-                // scrcpyを起動する
-                Shell.Async_Comand("scrcpy_Connect_USB", "\\scrcpy.exe", " --serial=" + Setting.Main.select_Device_Info.Serial + scrcpy_Option());
+                Connection_Start("USB");
             }
+        }
+
+        private void Connection_Start(string Mode)
+        {
+            Device_Connection device_Connection = new Device_Connection();
+            device_Connection.Mode = 2;
+            device_Connection.Serial = Mode;
+            device_Connection.device_Info = Setting.Main.select_Device_Info;
+            device_Connection.ShowDialog();
+            if (device_Connection.Error)
+            {
+                // エラーメッセージを表示する
+                MessageBox.Show("接続を認識できませんでした。", "メッセージ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+            string Serial = "";
+            if (Mode == "USB")
+            {
+                Serial = Setting.Main.select_Device_Info.Serial;
+            }
+            else
+            {
+                Serial = Setting.Main.select_Device_Info.IP_Adress + ":5555";
+            }
+            Thread.Sleep(500);
+            Shell Shell = new Shell();
+            Shell.Async_Comand2("scrcpy_Connect", "\\scrcpy.exe", " --serial=" + Serial + scrcpy_Option());
         }
 
         private bool op_Start_Rec_Check()
@@ -271,6 +312,16 @@ namespace UIscrcpy
             {
                 Setting.Main.Rec_path = TextBox_Rec_Folder.Text;
             }
+
+            for (int i = 0; i < Setting.Main.Device_List.Count; i++)
+            {
+                if (Setting.Main.select_Device_Info.Serial == Setting.Main.Device_List[i].Serial)
+                {
+                    Setting.Main.Device_List[i] = Setting.Main.select_Device_Info;
+                    break;
+                }
+            }
+
             Setting setting = new Setting();
             setting.Main_save();
         }
@@ -336,6 +387,50 @@ namespace UIscrcpy
                 }
             }
             return index;
+        }
+
+        private string This_Ver()
+        {
+            var assemblyName = Assembly.GetExecutingAssembly().GetName();
+            var n1 = assemblyName.Name;    // "アセンブリ名"
+            var v1 = assemblyName.Version; // "1.0.0.0"
+            return v1.ToString();
+        }
+
+        private string GitHub_Ver(string URL)
+        {
+            string Text = "";
+            try
+            {
+                // WebClientを作成
+                WebClient wc = new WebClient();
+
+                // WebClientからStreamとStreamReaderを作成
+                // args[0]にはURLが入っているものとする
+                Stream st = wc.OpenRead(URL);
+                StreamReader sr = new StreamReader(st);
+                Text = sr.ReadToEnd();
+                // StreamとStreamReaderを閉じる
+                sr.Close();
+                st.Close();
+            }
+            catch (Exception e)
+            {
+                // URLのファイルが見つからない等のエラーが発生
+                Debug.WriteLine("URLが見つかりません。");
+                return "";
+            }
+
+            Match mh;
+            mh = Regex.Match(Text, @"<AssemblyVersion>(?<Ver_No>.*?)</AssemblyVersion>", RegexOptions.None);
+            if (mh.Success)
+            {
+                return mh.Groups["Ver_No"].Value;
+            }
+            else
+            {
+                return "";
+            }
         }
 
         private string scrcpy_Option()
@@ -489,11 +584,17 @@ namespace UIscrcpy
             if (Start_Rec == true)
             {
                 DateTime dt = DateTime.Now;
-                string File_Name = dt.ToString($"{dt:yyyyMMddHHmmss}");
+                string File_Name = dt.ToString($"{dt:yyyyMMddHHmmssfff}");
                 option = @" --record=""" + Setting.Main.Rec_path + "\\" + Setting.Main.select_Device_Info.Model_Name + "_" + File_Name + @".mp4""";
                 Debug.WriteLine(option);
             }
             return option;
+        }
+
+        private void Button_About_Click(object sender, EventArgs e)
+        {
+            Form_Version form_Version = new Form_Version();
+            form_Version.ShowDialog();
         }
     }
 }

@@ -193,9 +193,23 @@ namespace UIscrcpy
         }
         public void Main_load()
         {
+            /*
             FileStream load_Data = new FileStream(Setting_Main_FileName, FileMode.Open);
             Main = (Main)Serializer_Main.Deserialize(load_Data);
             load_Data.Close();
+            */
+
+            try
+            {
+                using (FileStream load_Data = new FileStream(Setting_Main_FileName, FileMode.Open))
+                {
+                    Main = (Main)Serializer_Main.Deserialize(load_Data);
+                }
+            }
+            catch
+            {
+                Main_init();        // 設定の初期化
+            }
         }
 
         static public bool Command_File_Check()

@@ -57,6 +57,7 @@
             label6 = new Label();
             groupBox4 = new GroupBox();
             Button_Close = new Button();
+            Button_About = new Button();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -353,7 +354,7 @@
             // Button_Close
             // 
             Button_Close.Dock = DockStyle.Bottom;
-            Button_Close.Location = new Point(0, 604);
+            Button_Close.Location = new Point(0, 599);
             Button_Close.Name = "Button_Close";
             Button_Close.Size = new Size(723, 34);
             Button_Close.TabIndex = 21;
@@ -361,11 +362,22 @@
             Button_Close.UseVisualStyleBackColor = true;
             Button_Close.Click += Button_Close_Click;
             // 
+            // Button_About
+            // 
+            Button_About.Location = new Point(587, 561);
+            Button_About.Name = "Button_About";
+            Button_About.Size = new Size(112, 34);
+            Button_About.TabIndex = 27;
+            Button_About.Text = "About";
+            Button_About.UseVisualStyleBackColor = true;
+            Button_About.Click += Button_About_Click;
+            // 
             // UIsrcpy
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(723, 638);
+            ClientSize = new Size(723, 633);
+            Controls.Add(Button_About);
             Controls.Add(label1);
             Controls.Add(Button_Close);
             Controls.Add(groupBox1);
@@ -424,5 +436,6 @@
         private Label label4;
         private Label label1;
         private Button Button_Rec_FolderOpen;
+        private Button Button_About;
     }
 }
