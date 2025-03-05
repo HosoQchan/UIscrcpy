@@ -1,5 +1,6 @@
 using Microsoft.WindowsAPICodePack.Dialogs;
 using MS.WindowsAPICodePack.Internal;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
@@ -215,10 +216,10 @@ namespace UIscrcpy
                 return;
             }
             Form_App_List form_App_List = new Form_App_List();
-            form_App_List.App_Info.Name = TextBox_App_Name.Text;
+            form_App_List.App_Info = Setting.Main.select_Device_Info.App_Start_Info;
 
             form_App_List.ShowDialog(this);
-            if (form_App_List.App_Info != null)
+            if (Setting.Main.select_Device_Info.App_Start_Info.Name != form_App_List.App_Info.Name)
             {
                 Setting.Main.select_Device_Info.App_Start_Info = form_App_List.App_Info;
                 TextBox_App_Name.Text = Setting.Main.select_Device_Info.App_Start_Info.Name;
