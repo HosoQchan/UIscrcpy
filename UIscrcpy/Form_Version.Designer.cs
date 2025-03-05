@@ -31,7 +31,7 @@
             label2 = new Label();
             Label_Git_Ver = new Label();
             PictureBox_Icon = new PictureBox();
-            label3 = new Label();
+            Label_New_Ver = new Label();
             label4 = new Label();
             Label_Now_Ver = new Label();
             groupBox1 = new GroupBox();
@@ -49,7 +49,7 @@
             label13 = new Label();
             Panel_New_Version = new Panel();
             Panel_UpDate_NG = new Panel();
-            label5 = new Label();
+            Label_UpDate_NG = new Label();
             label1 = new Label();
             Panel_UpDate_New = new Panel();
             label11 = new Label();
@@ -101,15 +101,15 @@
             PictureBox_Icon.TabIndex = 3;
             PictureBox_Icon.TabStop = false;
             // 
-            // label3
+            // Label_New_Ver
             // 
-            label3.AutoSize = true;
-            label3.ForeColor = Color.Red;
-            label3.Location = new Point(6, 52);
-            label3.Name = "label3";
-            label3.Size = new Size(118, 25);
-            label3.TabIndex = 4;
-            label3.Text = "最新バージョン:";
+            Label_New_Ver.AutoSize = true;
+            Label_New_Ver.ForeColor = Color.Red;
+            Label_New_Ver.Location = new Point(6, 52);
+            Label_New_Ver.Name = "Label_New_Ver";
+            Label_New_Ver.Size = new Size(118, 25);
+            Label_New_Ver.TabIndex = 4;
+            Label_New_Ver.Text = "最新バージョン:";
             // 
             // label4
             // 
@@ -131,7 +131,7 @@
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(label3);
+            groupBox1.Controls.Add(Label_New_Ver);
             groupBox1.Controls.Add(Label_Now_Ver);
             groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(Label_Git_Ver);
@@ -273,35 +273,34 @@
             Panel_New_Version.Controls.Add(label12);
             Panel_New_Version.Location = new Point(6, 30);
             Panel_New_Version.Name = "Panel_New_Version";
-            Panel_New_Version.Size = new Size(547, 117);
+            Panel_New_Version.Size = new Size(547, 95);
             Panel_New_Version.TabIndex = 11;
             // 
             // Panel_UpDate_NG
             // 
-            Panel_UpDate_NG.Controls.Add(label5);
+            Panel_UpDate_NG.Controls.Add(Label_UpDate_NG);
             Panel_UpDate_NG.Location = new Point(8, 12);
             Panel_UpDate_NG.Name = "Panel_UpDate_NG";
-            Panel_UpDate_NG.Size = new Size(457, 52);
+            Panel_UpDate_NG.Size = new Size(457, 43);
             Panel_UpDate_NG.TabIndex = 15;
             // 
-            // label5
+            // Label_UpDate_NG
             // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            label5.ForeColor = Color.Red;
-            label5.Location = new Point(8, 9);
-            label5.Name = "label5";
-            label5.Size = new Size(419, 30);
-            label5.TabIndex = 5;
-            label5.Text = "最新のバージョン情報が取得できませんでした。";
+            Label_UpDate_NG.AutoSize = true;
+            Label_UpDate_NG.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            Label_UpDate_NG.ForeColor = Color.Red;
+            Label_UpDate_NG.Location = new Point(8, 9);
+            Label_UpDate_NG.Name = "Label_UpDate_NG";
+            Label_UpDate_NG.Size = new Size(0, 25);
+            Label_UpDate_NG.TabIndex = 5;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            label1.Location = new Point(300, 67);
+            label1.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            label1.Location = new Point(253, 58);
             label1.Name = "label1";
-            label1.Size = new Size(168, 30);
+            label1.Size = new Size(139, 25);
             label1.TabIndex = 5;
             label1.Text = "からDL出来ます。";
             // 
@@ -312,48 +311,48 @@
             Panel_UpDate_New.Controls.Add(Label_NewVer);
             Panel_UpDate_New.Location = new Point(8, 12);
             Panel_UpDate_New.Name = "Panel_UpDate_New";
-            Panel_UpDate_New.Size = new Size(457, 52);
+            Panel_UpDate_New.Size = new Size(457, 43);
             Panel_UpDate_New.TabIndex = 6;
             // 
             // label11
             // 
             label11.AutoSize = true;
-            label11.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            label11.Location = new Point(240, 9);
+            label11.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            label11.Location = new Point(203, 9);
             label11.Name = "label11";
-            label11.Size = new Size(197, 30);
+            label11.Size = new Size(162, 25);
             label11.TabIndex = 2;
             label11.Text = "が公開されています。";
             // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            label9.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
             label9.ForeColor = Color.Red;
             label9.Location = new Point(8, 9);
             label9.Name = "label9";
-            label9.Size = new Size(144, 30);
+            label9.Size = new Size(119, 25);
             label9.TabIndex = 0;
             label9.Text = "最新バージョン:";
             // 
             // Label_NewVer
             // 
             Label_NewVer.AutoSize = true;
-            Label_NewVer.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            Label_NewVer.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
             Label_NewVer.ForeColor = Color.Red;
-            Label_NewVer.Location = new Point(158, 9);
+            Label_NewVer.Location = new Point(133, 9);
             Label_NewVer.Name = "Label_NewVer";
-            Label_NewVer.Size = new Size(76, 30);
+            Label_NewVer.Size = new Size(64, 25);
             Label_NewVer.TabIndex = 1;
             Label_NewVer.Text = "0.0.0.0";
             // 
             // LinkLabel_New_Version
             // 
             LinkLabel_New_Version.AutoSize = true;
-            LinkLabel_New_Version.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            LinkLabel_New_Version.Location = new Point(251, 67);
+            LinkLabel_New_Version.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            LinkLabel_New_Version.Location = new Point(211, 58);
             LinkLabel_New_Version.Name = "LinkLabel_New_Version";
-            LinkLabel_New_Version.Size = new Size(43, 30);
+            LinkLabel_New_Version.Size = new Size(36, 25);
             LinkLabel_New_Version.TabIndex = 4;
             LinkLabel_New_Version.TabStop = true;
             LinkLabel_New_Version.Text = "ここ";
@@ -362,19 +361,19 @@
             // label12
             // 
             label12.AutoSize = true;
-            label12.Font = new Font("Yu Gothic UI", 11F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            label12.Location = new Point(16, 67);
+            label12.Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            label12.Location = new Point(16, 58);
             label12.Name = "label12";
-            label12.Size = new Size(229, 30);
+            label12.Size = new Size(189, 25);
             label12.TabIndex = 3;
             label12.Text = "最新バージョンについては";
             // 
             // Button_Close
             // 
             Button_Close.Dock = DockStyle.Bottom;
-            Button_Close.Location = new Point(0, 411);
+            Button_Close.Location = new Point(0, 384);
             Button_Close.Name = "Button_Close";
-            Button_Close.Size = new Size(581, 34);
+            Button_Close.Size = new Size(586, 34);
             Button_Close.TabIndex = 12;
             Button_Close.Text = "閉じる";
             Button_Close.UseVisualStyleBackColor = true;
@@ -385,7 +384,7 @@
             Panel_Now_Version.Controls.Add(Label_Ver_Message);
             Panel_Now_Version.Location = new Point(6, 30);
             Panel_Now_Version.Name = "Panel_Now_Version";
-            Panel_Now_Version.Size = new Size(547, 117);
+            Panel_Now_Version.Size = new Size(547, 95);
             Panel_Now_Version.TabIndex = 13;
             // 
             // Label_Ver_Message
@@ -405,7 +404,7 @@
             groupBox4.Controls.Add(Panel_New_Version);
             groupBox4.Location = new Point(12, 249);
             groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(561, 157);
+            groupBox4.Size = new Size(561, 132);
             groupBox4.TabIndex = 14;
             groupBox4.TabStop = false;
             groupBox4.Text = "Update";
@@ -414,7 +413,7 @@
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(581, 445);
+            ClientSize = new Size(586, 418);
             Controls.Add(groupBox4);
             Controls.Add(Button_Close);
             Controls.Add(groupBox3);
@@ -454,7 +453,7 @@
         private Label label2;
         private Label Label_Git_Ver;
         private PictureBox PictureBox_Icon;
-        private Label label3;
+        private Label Label_New_Ver;
         private Label label4;
         private Label Label_Now_Ver;
         private GroupBox groupBox1;
@@ -483,6 +482,6 @@
         private GroupBox groupBox4;
         private Panel Panel_UpDate_New;
         private Panel Panel_UpDate_NG;
-        private Label label5;
+        private Label Label_UpDate_NG;
     }
 }

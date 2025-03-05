@@ -21,6 +21,8 @@ namespace UIscrcpy
         public Form_Version()
         {
             InitializeComponent();
+            Label_New_Ver.Visible = false;
+            Label_Git_Ver.Visible=false;
         }
 
         private void Form_Version_Load(object sender, EventArgs e)

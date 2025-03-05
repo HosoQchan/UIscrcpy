@@ -6,6 +6,7 @@ using System.Net;
 using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
@@ -54,11 +55,13 @@ namespace UIscrcpy
         //Formが表示されたら発生するイベント
         private void Form_Shown(object sender, EventArgs e)
         {
+            /*
             if ((GitHub_Version == "") || (This_Version != GitHub_Version))
             {
                 Form_Version form_Version = new Form_Version();
                 form_Version.ShowDialog();
             }
+            */
         }
 
         private void Setting_Init()
@@ -400,19 +403,17 @@ namespace UIscrcpy
         private string GitHub_Ver(string URL)
         {
             string Text = "";
+            /*
             try
             {
-                // WebClientを作成
-                WebClient wc = new WebClient();
-
-                // WebClientからStreamとStreamReaderを作成
-                // args[0]にはURLが入っているものとする
-                Stream st = wc.OpenRead(URL);
-                StreamReader sr = new StreamReader(st);
-                Text = sr.ReadToEnd();
-                // StreamとStreamReaderを閉じる
-                sr.Close();
-                st.Close();
+                //WebClientを作成
+                System.Net.WebClient wc = new System.Net.WebClient();
+                //文字コードを指定
+                wc.Encoding = System.Text.Encoding.UTF8;
+                //データを文字列としてダウンロードする
+                Text = wc.DownloadString(URL);
+                //後始末
+                wc.Dispose();
             }
             catch (Exception e)
             {
@@ -431,6 +432,8 @@ namespace UIscrcpy
             {
                 return "";
             }
+            */
+            return Text;
         }
 
         private string scrcpy_Option()
