@@ -6,328 +6,247 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UIscrcpy
 {
-
-    public class Shell
+    public class Command
     {
-        public string Process_Name = "";
-        public string Async_Output = "";
-        public string Async_Error = "";
-        public string Output_Results = "";
-        public string Error_Results = "";
+        private Shell shell = new Shell();
+        public Device_Info deviceinfo = new Device_Info();
 
-        public void Async_Comand2(string Name, string Command, string Option)
+        /// <summary>
+        /// TCP/IP接続コマンドを送信する
+        /// </summary>
+        /// <returns></returns>
+        public void TCPIP_Connect()
         {
-            Process_Name = Name;
-            Kill_Process(Command.Replace("\\", ""));
 
-            Command = Setting.Main.scrcpy_path + Command;
-
-            var si = new ProcessStartInfo();
-            // バッチファイルを起動する人は、cmd.exeさんなので
-            si.FileName = "cmd.exe";
-
-            // コマンド処理実行後、コマンドウィンドウ終わるようにする。
-            si.Arguments = "/c ";
-
-            // コマンドラインを指定
-            if (Option != "")
-            {
-                Command = Command + Option;
-            }
-            si.Arguments = si.Arguments + Command;
-
-            // エンコード指定
-            si.StandardOutputEncoding = System.Text.Encoding.UTF8;
-
-            // ウィンドウ表示を完全に消す
-            si.CreateNoWindow = true;
-
-            si.RedirectStandardError = true;
-            si.RedirectStandardOutput = true;
-            
-            si.UseShellExecute = false;
-            using (var proc = new Process())
-            using (var ctoken = new CancellationTokenSource())
-            {
-                proc.EnableRaisingEvents = true;
-                proc.StartInfo = si;
-
-                // コールバックの設定
-                proc.Exited += (sender, ev) =>
-                {
-                    Debug.WriteLine($"Prosess_Exited");
-                    // プロセスが終了すると呼ばれる
-                    ctoken.Cancel();
-                };
-
-                // プロセスの開始
-                Debug.WriteLine($"Prosess_Start");
-                Output_Results = "";
-                Error_Results = "";
-                Async_Output = "";
-                Async_Error = "";
-                proc.Start();
-                //出力を読み取る
-//                string results = proc.StandardOutput.ReadToEnd();
-
-                Task.Run(() =>
-                {
-                    while (true)
-                    {
-                        string Output = proc.StandardOutput.ReadLine();
-                        if (Output == null)
-                        {
-                            break;
-                        }
-                        Output_Results = Output_Results + Output + "\r\n";
-                        Proc_StandardOutput(Process_Name, Output);
-                    }
-                    while (true)
-                    {
-                        string Error = proc.StandardError.ReadLine();
-                        if (Error == null)
-                        {
-                            break;
-                        }
-                        Error_Results = Error_Results + Error + "\r\n";
-                        Proc_StandardError(Process_Name, Error);
-                    }
-                });
-     
-                Task task2 = Task.Run(() =>
-                {
-                    ctoken.Token.WaitHandle.WaitOne();
-                    proc.WaitForExit();
-                });
-            }
+            shell.Async_Comand("ADB_Tcpip", "\\adb.exe", " tcpip 5555");
         }
 
-        public void Async_Comand(string Name, string Command, string Option)
+        /// <summary>
+        /// WiFi接続コマンドを送信する
+        /// </summary>
+        /// <returns>
+        /// Error : false
+        /// </returns>
+        public bool WiFi_Connect(string IP_Adress)
         {
-            Process_Name = Name;
-            Kill_Process(Command.Replace("\\", ""));
+            // TCP / IP接続コマンドを送信する
+            TCPIP_Connect();
 
-            Command = Setting.Main.scrcpy_path + Command;
-
-            var si = new ProcessStartInfo();
-            // バッチファイルを起動する人は、cmd.exeさんなので
-            si.FileName = "cmd.exe";
-
-            // コマンド処理実行後、コマンドウィンドウ終わるようにする。
-            si.Arguments = "/c ";
-
-            // コマンドラインを指定
-            if (Option != "")
-            {
-                Command = Command + Option;
-            }
-            si.Arguments = si.Arguments + Command;
-
-            // エンコード指定
-            si.StandardOutputEncoding = System.Text.Encoding.UTF8;
-
-            // ウィンドウ表示を完全に消す
-            si.CreateNoWindow = true;
-
-            si.RedirectStandardError = true;
-            si.RedirectStandardOutput = true;
-
-            si.UseShellExecute = false;
-            using (var proc = new Process())
-            using (var ctoken = new CancellationTokenSource())
-            {
-                proc.EnableRaisingEvents = true;
-                proc.StartInfo = si;
-
-                // コールバックの設定
-                proc.Exited += (sender, ev) =>
-                {
-                    Debug.WriteLine($"Prosess_Exited");
-                    // プロセスが終了すると呼ばれる
-                    ctoken.Cancel();
-                };
-
-                // プロセスの開始
-                Debug.WriteLine($"Prosess_Start");
-                Output_Results = "";
-                Error_Results = "";
-                Async_Output = "";
-                Async_Error = "";
-                proc.Start();
-
-                Task.WaitAll(
-                    Task.Run(() =>
-                    {
-                        while (true)
-                        {
-                            string Output = proc.StandardOutput.ReadLine();
-                            if (Output == null)
-                            {
-                                break;
-                            }
-                            Output_Results = Output_Results + Output + "\r\n";
-                            Proc_StandardOutput(Process_Name, Output);
-                        }
-                        while (true)
-                        {
-                            string Error = proc.StandardError.ReadLine();
-                            if (Error == null)
-                            {
-                                break;
-                            }
-                            Error_Results = Error_Results + Error + "\r\n";
-                            Proc_StandardError(Process_Name, Error);
-                        }
-                    }),
-                    Task.Run(() =>
-                    {
-                        ctoken.Token.WaitHandle.WaitOne();
-                        proc.WaitForExit();
-                    })
-                );
-            }
-        }
-
-        private void Proc_StandardOutput(string Process_Name,string Data)
-        {
             Match mh;
-            if (!string.IsNullOrWhiteSpace(Data))
+            shell.Async_Comand("ADB_Connect", "\\adb.exe", " connect " + IP_Adress + ":5555");
+            mh = Regex.Match(shell.Output_Results, @"connected to.*", RegexOptions.None);
+            if (mh.Success)
             {
-                switch (Process_Name)
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// WiFi切断コマンドを送信する
+        /// </summary>
+        /// <returns></returns>
+        public void WiFi_Disconnect()
+        {
+            shell.Async_Comand("ADB_Disconnect", "\\adb.exe", " disconnect");
+        }
+
+        /// <summary>
+        /// 端末情報を取得
+        /// </summary>
+        /// <returns>
+        /// Serial = USB > Serial
+        /// Serial = Wifi > Serial = ""
+        /// Product_Name = 製品名
+        /// Model_Name = 機種名
+        /// 
+        /// Error : Serial = ""
+        /// </returns>
+        public Device_Info Device_Info()
+        {
+            deviceinfo = new Device_Info();
+            Match mh;
+            shell.Async_Comand("ADB_Devices_List", "\\adb.exe", " devices -l");
+            mh = Regex.Match(shell.Output_Results, @"\r\n(?<Dname>.+)device product:(?<Product>.*)model:(?<Model>.*)device:.*transport_id:(?<ID>.+)", RegexOptions.None);
+            if (mh.Success)
+            {
+                // 端末情報のSerialが、IPアドレス以外か確認する
+                string Serial = mh.Groups["Dname"].Value.Trim();
+                if (Serial_Check(Serial))
                 {
-                    case "ADB_Disconnect":
-                        break;
-                    case "ADB_Devices_List":
-                        break;
-                    case "ADB_Tcpip":
-                        break;
-                    case "ADB_Connect":
-                        break;
-                    case "ADB_IP_Address":
-                        Debug.WriteLine("Data Received -- ADB_IP_Address");
-                        Debug.WriteLine(Data);
-
-                        string Patturn = @"inet (?<Adress>\d+\.\d+\.\d+\.\d+)";
-                        mh = Regex.Match(Data, @Patturn, RegexOptions.None);
-                        if (mh.Success)
-                        {
-                            Async_Output = mh.Groups["Adress"].Value;
-                        }
-                        break;
-                    case "ADB_List_Package":
-                        Debug.WriteLine("Data Received -- ADB_List_Package");
-                        Debug.WriteLine(Data);
-
-                        break;
-                    case "scrcpy_App_List":
-                        Debug.WriteLine("Data Received -- scrcpy_App_List");
-                        Debug.WriteLine(Data);
-
-                        break;
-                    case "scrcpy_Connect":
-                        Patturn = @"INFO:     -->";
-                        mh = Regex.Match(Data, @Patturn, RegexOptions.None);
-                        if (mh.Success)
-                        {
-                            Debug.WriteLine("-- scrcpy_Connect");
-                            Debug.WriteLine(Data);
-                        }
-                        
-
-                        break;
+                    deviceinfo.Serial = Serial;
+                    deviceinfo.Product_Name = mh.Groups["Product"].Value.Trim();
+                    deviceinfo.Model_Name = mh.Groups["Model"].Value.Trim();
                 }
             }
+            return deviceinfo;
         }
-
-        private void Proc_StandardError(string Process_Name, string Data)
+        /// <summary>
+        /// 端末情報のSerialが、IPアドレス以外か確認する
+        /// </summary>
+        /// <returns></returns>
+        private bool Serial_Check(string Serial)
         {
             Match mh;
-            if (!string.IsNullOrWhiteSpace(Data))
+            mh = Regex.Match(Serial, @"(?<Adress>\d+\.\d+\.\d+\.\d+)", RegexOptions.None);
+            if (mh.Success)
             {
-                switch (Process_Name)
-                {
-                    case "ADB_Disconnect":
-                        Debug.WriteLine("Error Received -- ADB_Disconnect");
-                        Debug.WriteLine(Data);
-                        break;
-                    case "ADB_Devices_List":
-                        Debug.WriteLine("Error Received -- ADB_Devices_List");
-                        Debug.WriteLine(Data);
-                        break;
-                    case "ADB_Tcpip":
-                        Debug.WriteLine("Error Received -- ADB_Tcpip");
-                        Debug.WriteLine(Data);
-                        break;
-                    case "ADB_Connect":
-                        Debug.WriteLine("Error Received -- ADB_Connect");
-                        Debug.WriteLine(Data);
-                        break;
-                    case "ADB_IP_Address":
-                        Debug.WriteLine("Error Received -- ADB_IP_Address");
-                        Debug.WriteLine(Data);
+                return false;
+            }
+            return true;
+        }
 
-                        break;
-                    case "ADB_List_Package":
-                        Debug.WriteLine("Error Received -- ADB_List_Package");
-                        Debug.WriteLine(Data);
+        /// <summary>
+        /// ＩＰアドレスを取得する
+        /// </summary>
+        /// <returns>
+        /// IP Adress
+        /// Error = ""
+        /// </returns>
+        public string IP_Adress_Info()
+        {
+            // TCP / IP接続コマンドを送信する
+            TCPIP_Connect();
 
-                        break;
-                    case "scrcpy_App_List":
-                        Debug.WriteLine("Error Received -- scrcpy_App_List");
-                        Debug.WriteLine(Data);
+            // TCP / IP接続コマンドを送信後、直ぐにＩＰアドレス取得コマンドを送信してしまうと、
+            // うまく処理してくれなかったので、1sのWaitを設けた
+            Thread.Sleep(2000);
 
-                        break;
-                    case "scrcpy_Connect":
-                        Debug.WriteLine("Error Received -- scrcpy_Connect");
-                        Debug.WriteLine(Data);
+            Match mh;
+            shell.Async_Comand("ADB_IP_Address", "\\adb.exe", " shell ip addr show wlan0");
+            mh = Regex.Match(shell.Output_Results, @"inet (?<Adress>\d+\.\d+\.\d+\.\d+)", RegexOptions.None);
+            if (mh.Success)
+            {
+                return mh.Groups["Adress"].Value;
+            }
+            return "";
+        }
 
-                        string Patturn = @"ERROR: Could not find ADB device ";
-                        mh = Regex.Match(Data, @Patturn, RegexOptions.None);
-                        if (mh.Success)
-                        {
-                            // エラーメッセージを表示する
-                            MessageBox.Show("接続を認識できませんでした。", "メッセージ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        }
-                        Patturn = @"ERROR: Server connection failed";
-                        mh = Regex.Match(Data, @Patturn, RegexOptions.None);
-                        if (mh.Success)
-                        {
-                            // エラーメッセージを表示する
-                            MessageBox.Show("接続を認識できませんでした。", "メッセージ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        }
-                        break;
-                }
+        /// <summary>
+        /// キーコマンドを送信する
+        /// </summary>
+        /// <returns>
+        /// Error : false
+        /// </returns>
+        public bool KeyCode(string Keycode)
+        {
+            string Option = "";
+            if (UIsrcpy.Connect_USB)
+            {
+                Option = " -d  shell input keyevent " + Keycode;
+            }
+            else
+            {
+                Option = " -e  shell input keyevent " + Keycode;
+            }
+
+            shell.Async_Comand("ADB_keyevent", "\\adb.exe", Option);
+            if (shell.Async_Error == "error")
+            {
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
 
-        private void Kill_Process(string Process_Name)
+        /// <summary>
+        /// スクリーンショットコマンドを実行する
+        /// </summary>
+        /// <returns>
+        /// Error : false
+        /// </returns>
+        public bool Screenshot()
         {
-            // プロセスを取得
-            System.Diagnostics.Process[] ps =
-                System.Diagnostics.Process.GetProcessesByName(Process_Name);
-
-            foreach (System.Diagnostics.Process p in ps)
+            if (!Directory.Exists(Setting.Rec_Path))
             {
-                //クローズメッセージを送信する
-                p.CloseMainWindow();
+                MessageBox.Show(Setting.Rec_Path + "\r\n" + Lng.ini["Msg", "フォルダが見つかりません。"], Lng.ini["Msg", "メッセージ"], MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
+            }
 
-                //プロセスが終了するまで最大1秒待機する
-                p.WaitForExit(1000);
-                //プロセスが終了したか確認する
-                if (p.HasExited)
+            string fileName = Setting.Rec_Path + DateTime.Now.ToString(UIsrcpy.DatetimeFormat) + ".png";
+            string Option = "";
+            if (UIsrcpy.Connect_USB)
+            {
+                Option = " -d exec-out screencap -p > " + fileName;
+            }
+            else
+            {
+                Option = " -e exec-out screencap -p > " + fileName;
+            }
+
+            shell.Async_Comand("ADB_Screenshot", "\\adb.exe", Option);
+            if (shell.Async_Error == "error")
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        
+        /// <summary>
+        /// アプリ一覧を取得する
+        /// </summary>
+        /// <returns></returns>
+        public void Application()
+        {
+            deviceinfo.App_List.Clear();
+
+            // 端末情報を取得
+            string Serial = Device_Info().Serial;
+
+            // 現在選択されている端末が、USB接続されていない場合は、Wifi接続で試みる
+            if (Serial != Setting.Main.select_Device_Info.Serial)
+            {
+                if (!WiFi_Connect(Setting.Main.select_Device_Info.IP_Adress))
                 {
-                    Debug.WriteLine(Process_Name + "が終了しました。");
+                    // エラーメッセージを表示する
+                    string Msg = Lng.ini["Msg", "接続できませんでした。"];
+                    MBox mbox = new MBox(Lng.ini["Msg", "メッセージ"], "WARNING", Msg, "OK", "OK");
+                    mbox.ShowDialog();
+                    deviceinfo.App_List = null;
+                    return;
                 }
                 else
                 {
-                    Debug.WriteLine(Process_Name + "が終了しませんでした。");
+                    Serial = Setting.Main.select_Device_Info.IP_Adress + ":5555";
                 }
             }
+          
+            Match mh;
+            // アプリ一覧を取得
+            shell.Async_Comand("scrcpy_App_List", "\\scrcpy.exe", " --serial=" + Serial + " --list-app");
+            mh = Regex.Match(shell.Error_Results, @"java.lang.AssertionError:.+", RegexOptions.None);
+            if (mh.Success)
+            {
+                // エラーメッセージを表示する
+                string Msg = Lng.ini["Msg", "アプリの取得に失敗しました。\"scrcpy\"のフォルダを、\"UIscrcpy\"のフォルダ内とは別の場所に移動して実行してみてください。"];
+                MBox mbox = new MBox(Lng.ini["Msg", "メッセージ"], "WARNING", Msg, "OK", "OK");
+                mbox.ShowDialog();
+                deviceinfo.App_List = null;
+                return;
+            }
+            foreach (var line in (shell.Output_Results).AsSpan().EnumerateLines())
+            {
+                mh = Regex.Match(line.ToString(), @"\s(-|\*)\s(?<App_Name>.+)\s+(?<Package>.+)", RegexOptions.None);
+                if (mh.Success)
+                {
+                    App_Info app_Info = new App_Info();
+                    app_Info.Name = mh.Groups["App_Name"].Value.Trim();
+                    app_Info.Package = mh.Groups["Package"].Value.Trim();
+                    deviceinfo.App_List.Add(app_Info);
+                }
+            }
+            // WiFi切断コマンドを送信する
+            WiFi_Disconnect();
+            return;
         }
     }
 }

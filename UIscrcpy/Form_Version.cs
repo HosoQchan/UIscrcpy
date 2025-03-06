@@ -15,59 +15,64 @@ namespace UIscrcpy
     public partial class Form_Version : Form
     {
         private const string License_Link = "https://ja.wikipedia.org/wiki/MIT_License";
-        private const string New_Version_Link = "https://github.com/HosoQchan/UIscrcpy/releases";
         private const string GitHub_Link = "https://github.com/HosoQchan/UIscrcpy";
+        private Icon icon = new Icon(".\\Resources\\Icon\\UIscrcpy.ico");
 
         public Form_Version()
         {
             InitializeComponent();
-            Label_New_Ver.Visible = false;
-            Label_Git_Ver.Visible=false;
+            this.Icon = icon;
+
+            GBox_Developer.Text = Lng.ini["Msg", "開発環境"];
+            Button_Close.Text = Lng.ini["Main", "閉じる"];
+
+            Panel_UpDate_Now.Visible = false;
+            Panel_UpDate_New.Visible = false;
+            Panel_Update_Info.Visible = false;
+
+            Label_This_Software.Text = Lng.ini["Msg", "このソフトウェアは"];
+            Label_Update_Info.Text = Lng.ini["Msg", "最新バージョンはこちらからDLできます。"];
+            Label_UpDate_New.Text = Lng.ini["Msg", "が公開されています。"];
+            Label_UpDate_Now.Text = Lng.ini["Msg", "お使いのバージョンは最新です。"];
         }
 
         private void Form_Version_Load(object sender, EventArgs e)
         {
-            Icon icon = new Icon(".\\icon\\UIscrcpy.ico");
+            
             PictureBox_Icon.Image = icon.ToBitmap();
 
             Label_Now_Ver.Text = UIsrcpy.This_Version;
-            if (UIsrcpy.GitHub_Version == "")
+
+            Label_Git_Ver.Visible = false;
+            Label_Git_VerNo.Visible = false;
+            // 現在のverと最新Verが同じ場合
+            if (UIsrcpy.This_Version == UIsrcpy.GitHub_Version)
             {
-                Label_Git_Ver.Text = "不明";
+
+
+                Panel_UpDate_Now.Visible = true;
+                Panel_UpDate_New.Visible = false;
+                Panel_Update_Info.Visible = false;
             }
+            // 現在のverと最新Verが異なる場合
             else
             {
-                Label_Git_Ver.Text = UIsrcpy.GitHub_Version;
-            }
-            Label_NewVer.Text = UIsrcpy.GitHub_Version;
-
-            if ((UIsrcpy.GitHub_Version != "") && (UIsrcpy.This_Version != UIsrcpy.GitHub_Version))
-            {
-                Panel_Now_Version.Visible = false;
-
-                Panel_New_Version.Visible = true;
-                Panel_UpDate_New.Visible = true;
-                Panel_UpDate_NG.Visible = false;
-            }
-            else
-            {
-                if (UIsrcpy.GitHub_Version == "")
+                if (UIsrcpy.GitHub_Version != "")
                 {
-                    Panel_Now_Version.Visible = false;
+                    Label_Git_Ver.Visible = true;
+                    Label_Git_VerNo.Text = UIsrcpy.GitHub_Version;
+                    Label_NewVer.Text = UIsrcpy.GitHub_Version;
 
-                    Panel_New_Version.Visible = true;
-                    Panel_UpDate_New.Visible = false;
-                    Panel_UpDate_NG.Visible = true;
+                    Panel_UpDate_Now.Visible = false;
+                    Panel_UpDate_New.Visible = true;
+                    Panel_Update_Info.Visible = false;
                 }
                 else
                 {
-                    Panel_Now_Version.Visible = true;
-
-                    Panel_New_Version.Visible = false;
+                    Panel_UpDate_Now.Visible = false;
                     Panel_UpDate_New.Visible = false;
-                    Panel_UpDate_NG.Visible = false;
+                    Panel_Update_Info.Visible = true;
                 }
-
             }
         }
         private void LinkLabel_GitHub_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -81,7 +86,7 @@ namespace UIscrcpy
         {
             //リンク先に移動したことにする
             LinkLabel_New_Version.LinkVisited = true;
-            Link_Display(New_Version_Link);
+            Link_Display(GitHub_Link);
         }
 
         private void LinkLabel_License_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -125,11 +130,15 @@ namespace UIscrcpy
             }
             catch (System.ComponentModel.Win32Exception noBrowser)
             {
-                MessageBox.Show("リンクが開けませんでした。", "メッセージ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                string Msg = Lng.ini["Msg", "リンクが開けませんでした。"];
+                MBox mbox = new MBox(Lng.ini["Msg", "メッセージ"], "WARNING", Msg, "OK", "OK");
+                mbox.ShowDialog();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("リンクが開けませんでした。", "メッセージ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                string Msg = Lng.ini["Msg", "リンクが開けませんでした。"];
+                MBox mbox = new MBox(Lng.ini["Msg", "メッセージ"], "WARNING", Msg, "OK", "OK");
+                mbox.ShowDialog();
             }
 
         }

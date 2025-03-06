@@ -17,6 +17,7 @@ namespace UIscrcpy
         public Form_Picture()
         {
             InitializeComponent();
+            this.Text = Lng.ini["Main", "画像"];
         }
 
         private void PictureBox_Click(object sender, EventArgs e)

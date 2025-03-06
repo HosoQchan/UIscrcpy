@@ -59,15 +59,5 @@ namespace UIscrcpy.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
-        /// </summary>
-        internal static System.Drawing.Bitmap kkrn_icon_wifi_11 {
-            get {
-                object obj = ResourceManager.GetObject("kkrn_icon_wifi_11", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
     }
 }

@@ -2,6 +2,8 @@ namespace UIscrcpy
 {
     internal static class Program
     {
+        public const string Version = "2.0.0";
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>

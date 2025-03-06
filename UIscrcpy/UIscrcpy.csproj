@@ -6,17 +6,219 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyVersion>1.0.2.0</AssemblyVersion>
-    <FileVersion>1.0.2.0</FileVersion>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="icon\android_Icon.png" />
-    <None Remove="icon\UIscrcpy.ico" />
+    <None Remove="Resources\Icon\camera.png" />
+    <None Remove="Resources\Icon\home.png" />
+    <None Remove="Resources\Icon\pcm.ico" />
+    <None Remove="Resources\Icon\Plus.ico" />
+    <None Remove="Resources\Icon\Plus_Minus.ico" />
+    <None Remove="Resources\Icon\power.png" />
+    <None Remove="Resources\Icon\Setting.ico" />
+    <None Remove="Resources\Icon\shortcut_key.png" />
+    <None Remove="Resources\Icon\Spinning1.png" />
+    <None Remove="Resources\Icon\Spinning2.png" />
+    <None Remove="Resources\Icon\Spinning3.png" />
+    <None Remove="Resources\Icon\Spinning4.png" />
+    <None Remove="Resources\Icon\UIscrcpy.ico" />
+    <None Remove="Resources\Icon\web.png" />
+    <None Remove="Resources\Image\Device_Regist\en\Regist11.png" />
+    <None Remove="Resources\Image\Device_Regist\en\Regist12.png" />
+    <None Remove="Resources\Image\Device_Regist\en\Regist13.png" />
+    <None Remove="Resources\Image\Device_Regist\en\Regist21.png" />
+    <None Remove="Resources\Image\Device_Regist\en\Regist22.png" />
+    <None Remove="Resources\Image\Device_Regist\en\Regist23.png" />
+    <None Remove="Resources\Image\Device_Regist\en\Regist24.png" />
+    <None Remove="Resources\Image\Device_Regist\en\shortcut_key.png" />
+    <None Remove="Resources\Image\Device_Regist\jp\Regist11.png" />
+    <None Remove="Resources\Image\Device_Regist\jp\Regist12.png" />
+    <None Remove="Resources\Image\Device_Regist\jp\Regist13.png" />
+    <None Remove="Resources\Image\Device_Regist\jp\Regist21.png" />
+    <None Remove="Resources\Image\Device_Regist\jp\Regist22.png" />
+    <None Remove="Resources\Image\Device_Regist\jp\Regist23.png" />
+    <None Remove="Resources\Image\Device_Regist\jp\Regist24.png" />
+    <None Remove="Resources\sound\Click.wav" />
+    <None Remove="scrcpy\adb.exe" />
+    <None Remove="scrcpy\AdbWinApi.dll" />
+    <None Remove="scrcpy\AdbWinUsbApi.dll" />
+    <None Remove="scrcpy\avcodec-61.dll" />
+    <None Remove="scrcpy\avformat-61.dll" />
+    <None Remove="scrcpy\avutil-59.dll" />
+    <None Remove="scrcpy\icon.png" />
+    <None Remove="scrcpy\libusb-1.0.dll" />
+    <None Remove="scrcpy\open_a_terminal_here.bat" />
+    <None Remove="scrcpy\scrcpy-console.bat" />
+    <None Remove="scrcpy\scrcpy-noconsole.vbs" />
+    <None Remove="scrcpy\scrcpy-server" />
+    <None Remove="scrcpy\scrcpy.exe" />
+    <None Remove="scrcpy\SDL2.dll" />
+    <None Remove="scrcpy\swresample-5.dll" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="icon\android_Icon.png">
+    <EmbeddedResource Include="Resources\Icon\Plus.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Icon\Plus_Minus.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Icon\Setting.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\android.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Controller\Back.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Controller\Camera.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Controller\Help.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Controller\Home.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\WiFi.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Controller\Menu.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Icon\Pcm.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Controller\Power.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Device_Regist\en\Regist11.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Device_Regist\en\Regist12.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Device_Regist\en\Regist13.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Device_Regist\en\Regist21.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Device_Regist\en\Regist22.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Device_Regist\en\Regist23.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Device_Regist\en\Regist24.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Device_Regist\en\shortcut_key.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Device_Regist\jp\Regist11.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Device_Regist\jp\Regist12.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Device_Regist\jp\Regist13.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Device_Regist\jp\Regist21.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Device_Regist\jp\Regist22.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Device_Regist\jp\Regist23.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Device_Regist\jp\Regist24.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Device_Regist\jp\shortcut_key.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Spinning1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Spinning2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Spinning3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Spinning4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\USB.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Controller\Vol_High.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Controller\Vol_Medium.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Controller\Vol_Off.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Image\Controller\Web.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\sound\Click.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scrcpy\adb.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scrcpy\AdbWinApi.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scrcpy\AdbWinUsbApi.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scrcpy\avcodec-61.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scrcpy\avformat-61.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scrcpy\avutil-59.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scrcpy\icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scrcpy\libusb-1.0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scrcpy\open_a_terminal_here.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scrcpy\scrcpy-console.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scrcpy\scrcpy-noconsole.vbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scrcpy\scrcpy-server">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scrcpy\scrcpy.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scrcpy\SDL2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scrcpy\swresample-5.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
@@ -26,7 +228,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="icon\UIscrcpy.ico">
+    <EmbeddedResource Include="Resources\Icon\UIscrcpy.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

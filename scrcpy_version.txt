@@ -1,0 +1,17 @@
+v2.0.0.0 
+- Major revisions were made to the entire source.
+- Support multi-language(*Standard:English and Japanese) 
+- Add terminal control buttons.
+- Added shortcut key setting.
+- Support for simultaneous connection of terminals > modified to unsupported.
+
+v1.0.2.0 
+- Fixed a bug that the previously selected application disappears when cancel is pressed on the application selection screen.
+
+v1.0.1.0 
+- Supports simultaneous connection of terminals.
+- Change the command invocation process.
+- Fixed a bug in the preset settings.
+- Changed the method of selecting and acquiring apps.
+- Added initialization process when data in the configuration file could not be read correctly.
+- Version information was added.

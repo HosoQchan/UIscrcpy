@@ -1,47 +1,51 @@
-# 名称（UIscrcpy）  
-パソコンからスマホ(Android)画面を操作できるソフトです。  
-このソフトは、本家scrcpy  ”https://scrcpy.org"  をGUIで操作する為の支援ソフトとなっております。  
+# Name (UIscrcpy) 
+This software allows you to operate your smartphone (Android) screen from your PC.  
+This software is a support software to operate the original scrcpy "https://scrcpy.org" with GUI.  
   
-# 動作画面  
-![Image](https://github.com/user-attachments/assets/94c62f6c-94af-48d0-b4f6-7f6f10f8660f)  
+# Operation screen  
+
   　
-# 特徴    
-scrcpyはコマンド操作が基本であるため操作がやや分かりずらく、気楽に使うのには少々ハードルが高いように感じました。  
-そこでGUIで直感的に操作できる支援ソフトを自作してみました。  
+# Feature 
+Since scrcpy is based on command operation, it is a little difficult to understand the operation, and I felt that it is a little hard to use it comfortably.  
+Therefore, we created our own support software that can be operated intuitively with GUI.  
   
-# 動作条件  
-・Windows11 64Bit  
-・.NET8.0以上  
-・scrcpyがインストールしてある環境  
+# Operating conditions 
+・Windows11 64Bit 
+・.NET8.0 or higher 
+・Environment where scrcpy is installed
   
-# インストール方法  
-最新のUIscrcpy.zipを、https://github.com/HosoQchan/UIscrcpy/releases からダウンロードし、  適当な場所に解凍して下さい。  
-解凍してできたUIscrcpyディレクトリ下の"UIscrcpy.exe"をダブルクリックで起動出来ます。  
-尚、動作にはscrcpyが必要になりますので、こちらも予めインストールしておいて下さい。  
-※scrcpyのインストール方法については本家を参照してください。  
+# How to install 
+Download the latest UIscrcpy.zip from and extract it to an appropriate location.  
+Double-click "UIscrcpy.exe" under the extracted UIscrcpy directory to start the program.  
+Please note that scrcpy is required for operation, so please install scrcpy beforehand.  
+Please refer to the original site for how to install scrcpy.  
   
-# 使い方  
-１．【最初にやっておくこと】  
-　・初回起動時、事前にインストールしておいた、scrcpyのあるフォルダを選択して下さい。  
-　・接続する端末の「登録」を画面の指示に従って行って下さい。  
-　・これで準備が整いました。  
+# How to use 
+1. 【First things to do】 
+・When you start the application for the first time, please select the folder where scrcpy is installed beforehand.  
+　Follow the on-screen instructions to “register” the device to be connected.  
+　Now you are ready to start mirroring. 2.  
   
-２．【ミラーリングの開始】  
-　・接続する端末を選び、Wifi接続かUSB接続のどちらかを選んでクリックすると、ミラーリングか開始されます。  
+2.[Start Mirroring] 
+・Select the device to be connected and choose either Wifi connection or USB connection and click to start mirroring.
   
-# コメント  
-**このソフトはあくまで、プログラミング学習の為の副産物であるため、**  
-**コーディングやバグ等、複数存在していると思います。**  
-**使用にあたってはその点を留意願います。**  
-**このソフトの使用によって発生したいかなる損害も作者は負いかねます。**  
+# Comments.  
+**Because this software is only a byproduct for learning programming, **  
+**I believe there are multiple coding, bugs, etc. **  
+**Please keep this in mind when using this software. **  
+**The author is not responsible for any damage caused by the use of this software. **  
   
-一部のアイコンで以下を使用しています。  
-<a href="https://jp.freepik.com/icon/android_2504881#fromView=keyword&page=1&position=0&uuid=2d47a079-e3ef-4638-8fbc-4104c2c42bb6">本アイコンの著作権はRuslan Babkinにあります</a>  
+The following source code is used as a reference for displaying the control buttons. 
+"https://github.com/pdone/FreeControl" 
+
+The following is used in some icons.  
+"https://jp.freepik.com/icon/android_2504881#fromView=keyword&page=1&position=0&uuid=2d47a079-e3ef-4638-8fbc-4104c2c42bb6" 
   
-# このソフトについて  
-* 作成者:H.Hosokawa  
-* 所属:個人  
-* E-mail:  
+
+# About this software.  
+* Author:H.Hosokawa  
+* Affiliation: Personal  
+* E-mail:.  
   
-# ライセンス情報  
-このソフトは[MIT license](https://en.wikipedia.org/wiki/MIT_License).となります。  
+# License Information 
+This software is [MIT license](https://en.wikipedia.org/wiki/MIT_License). The name of this software is [MIT license]().  

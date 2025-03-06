@@ -37,7 +37,7 @@
             PictureBox.Dock = DockStyle.Fill;
             PictureBox.Location = new Point(0, 0);
             PictureBox.Name = "PictureBox";
-            PictureBox.Size = new Size(618, 424);
+            PictureBox.Size = new Size(634, 474);
             PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
             PictureBox.TabIndex = 0;
             PictureBox.TabStop = false;
@@ -47,7 +47,7 @@
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(618, 424);
+            ClientSize = new Size(634, 474);
             ControlBox = false;
             Controls.Add(PictureBox);
             FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -55,7 +55,6 @@
             MinimizeBox = false;
             MinimumSize = new Size(640, 480);
             Name = "Form_Picture";
-            ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "画像";
             Load += Form_Picture_Load;

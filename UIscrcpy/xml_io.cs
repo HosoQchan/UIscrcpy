@@ -2,11 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using static UIscrcpy.UIsrcpy;
 
 namespace UIscrcpy
 {
@@ -14,47 +17,28 @@ namespace UIscrcpy
     [XmlRoot("Main")]
     public class Main
     {
+        [XmlElement("Language")]
+        public string Language { get; set; } = "en";
         [XmlElement("scrcpy_path")]
-        public string scrcpy_path { get; set; } = "";
-        [XmlElement("Device_List")]
-        public List<Device_Info> Device_List { get; set; } = new List<Device_Info>();
-        [XmlElement("select_Device_Info")]
-        public Device_Info select_Device_Info { get; set; } = new Device_Info();
-        [XmlElement("preset_list")]
-        public List<preset_item> preset_list { get; set; } = new List<preset_item>();
+        public string Scrcpy_Path { get; set; } = "";
+        [XmlElement("MODkey")]
+        public string Scrcpy_MODkey { get; set; } = "lalt";
+
         [XmlElement("preset_select_no")]
         public int preset_select_no { get; set; } = 0;
         [XmlElement("Rec_Start")]
         public bool Rec_Start { get; set; } = false;
         [XmlElement("Rec_path")]
         public string Rec_path { get; set; } = "";
-    }
+        [XmlElement("Screenshot_path")]
+        public string Screenshot_path { get; set; } = "";
 
-    public class Device_Info
-    {
-        [XmlElement("Id_No")]
-        public string Serial { get; set; } = "";
-        [XmlElement("Product_Name")]
-        public string Product_Name { get; set; } = "";
-        [XmlElement("Model_Name")]
-        public string Model_Name { get; set; } = "";
-        [XmlElement("IP_Adress")]
-        public string IP_Adress { get; set; } = "";
-        [XmlElement("App_Start")]
-        public bool App_Start { get; set; } = false;
-        [XmlElement("App_Start_Info")]
-        public App_Info App_Start_Info { get; set; } = new App_Info();
-        [XmlElement("App_List")]
-        public List<App_Info> App_List { get; set; } = new List<App_Info>();
-    }
-    public class App_Info
-    {
-        [XmlElement("Name")]
-        public string Name { get; set; } = "";
-        [XmlElement("Package")]
-        public string Package { get; set; } = "";
-        [XmlElement("Path")]
-        public string Path { get; set; } = "";
+        [XmlElement("preset_list")]
+        public List<preset_item> preset_list { get; set; } = new List<preset_item>();
+        [XmlElement("Device_List")]
+        public List<Device_Info> Device_List { get; set; } = new List<Device_Info>();
+        [XmlElement("select_Device_Info")]
+        public Device_Info select_Device_Info { get; set; } = new Device_Info();
     }
 
     public class preset_item
@@ -67,12 +51,70 @@ namespace UIscrcpy
         public string video_size { get; set; } = "default";
         public string video_bps { get; set; } = "default";
         public string video_fps { get; set; } = "default";
-        public string video_buffer {  get; set; } = "default";
+        public string video_buffer { get; set; } = "default";
         public string audio_bps { get; set; } = "default";
         public string audio_buffer { get; set; } = "default";
 
         public bool Disable_Sleep { set; get; } = false;
         public bool Tap_Display { set; get; } = false;
+    }
+
+    public class Device_Info
+    {
+        [XmlElement("Serial")]
+        public string Serial { get; set; } = "";
+        [XmlElement("Product_Name")]
+        public string Product_Name { get; set; } = "";
+        [XmlElement("Model_Name")]
+        public string Model_Name { get; set; } = "";
+        [XmlElement("IP_Adress")]
+        public string IP_Adress { get; set; } = "";
+
+        [XmlElement("Controller")]
+        public Controller_item Controller { get; set; } = new Controller_item();
+        [XmlElement("Scrcpy")]
+        public Scrcpy_item Scrcpy { get; set; } = new Scrcpy_item();
+
+        [XmlElement("App_Start")]
+        public bool App_Start { get; set; } = false;
+        [XmlElement("App_Start_Info")]
+        public App_Info App_Start_Info { get; set; } = new App_Info();
+        [XmlElement("App_List")]
+        public List<App_Info> App_List { get; set; } = new List<App_Info>();
+    }
+
+    public class Controller_item
+    {
+        [XmlElement("PointX")]
+        public int PointX { get; set; } = 0;
+        [XmlElement("PointY")]
+        public int PointY { get; set; } = 0;
+        [XmlElement("Width")]
+        public int Width { get; set; } = 57;
+        [XmlElement("Height")]
+        public int Height { get; set; } = 345;
+    }
+
+    public class Scrcpy_item
+    {
+        [XmlElement("PointX")]
+        public int PointX { get; set; } = 0;
+        [XmlElement("PointY")]
+        public int PointY { get; set; } = 0;
+        [XmlElement("Width")]
+        public int Width { get; set; } = 0;
+        [XmlElement("Height")]
+        public int Height { get; set; } = 0;
+    }
+
+    public class App_Info
+    {
+        [XmlElement("Name")]
+        public string Name { get; set; } = "";
+        [XmlElement("Package")]
+        public string Package { get; set; } = "";
+        [XmlElement("Path")]
+        public string Path { get; set; } = "";
     }
 
     public class Setting
@@ -81,35 +123,18 @@ namespace UIscrcpy
 
         // クラス化した設定値を、どのクラスからも読み書き出来るようにする
         static public Main Main = new Main();
-//        public Device_Info Device_Info = new Device_Info();
 
         // アプリケーションのフォルダ
         static public string App_Path;
 
-        // アプリケーションの設定保存用フォルダ
-        static public string App_Data_Path;
-
         // 録画保存用フォルダ
         static public string Rec_Path;
 
-        // デバイスごとの保存用フォルダ
-        static public string Device_Path;
-
-        // bat用フォルダ
-        static public string bat_Path;
+        // アプリアイコン保存用フォルダ
+        static public string App_Icon_Path;
 
         // メインの設定ファイル名
         static public string Setting_Main_FileName;
-        static public bool Setting_Main_Read = false;     // メインの設定読み込み済フラグ
-
-        /*
-        // プリセット用のbatファイル名
-        static string p_default_fileName = "priset_default.bat";
-        static string p_light_fileName = "priset_light.bat";
-        static string p_medium_fileName = "priset_medium.bat";
-        static string p_high_fileName = "priset_high.bat";
-        static string p_custom_fileName = "priset_custom.bat";
-        */
 
         // プリセット名
         public static Dictionary<string, int> preset = new Dictionary<string, int>()
@@ -118,60 +143,58 @@ namespace UIscrcpy
              {"light"   ,1},
              {"medium"  ,2},
              {"high"    ,3},
-             {"custom"  ,4}
+        };
+        // ショートカットキー
+        public static Dictionary<string, int> modkey = new Dictionary<string, int>()
+        {
+             {"lctrl",0},
+             {"rctrl",1},
+             {"lalt",2},
+             {"ralt",3},
+             {"lsuper",4},
+             {"rsuper",55}
         };
 
-        public void Setting_Main_Create()
+        public void Setting_Main_Load()
         {
-            if (!Setting_Main_Read)
+            DirectoryInfo info;
+            // ローカルのApplication Dataフォルダのパスを取得
+            string Path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+            // アプリケーションのフォルダ
+            App_Path = System.AppDomain.CurrentDomain.BaseDirectory;
+
+            // scrcpy用のフォルダを作成
+            Scrcpy_Copy();
+
+            // 録画保存用フォルダを作成
+            info = Directory.CreateDirectory(App_Path + "Capture");
+            Rec_Path = info.FullName + "\\";
+
+            // アプリアイコン保存用フォルダを作成
+            info = Directory.CreateDirectory(App_Path + "App_Icon");
+            App_Icon_Path = info.FullName + "\\";
+
+            Setting_Main_FileName = App_Path + "UIscrcpy.xml";
+            if (File.Exists(Setting_Main_FileName))
             {
-                DirectoryInfo info;
-                // ローカルのApplication Dataフォルダのパスを取得
-                string Path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-                // アプリケーションのフォルダ
-                App_Path = System.AppDomain.CurrentDomain.BaseDirectory;
-
-                // scrcpy用のフォルダを作成
-                info = Directory.CreateDirectory(App_Path + "scrcpy");
-
-                // アプリケーションの設定保存用フォルダ
-                info = Directory.CreateDirectory(Path + "\\UIscrcpy");
-                App_Data_Path = info.FullName + "\\";
-                Setting_Main_FileName = App_Data_Path + "Setting.xml";
-
-                // 録画保存用フォルダを作成
-                info = Directory.CreateDirectory(App_Data_Path + "Capture");
-                Rec_Path = info.FullName;
-
-                // Deviceごとの保存用フォルダを作成
-                info = Directory.CreateDirectory(App_Data_Path + "Device");
-                Device_Path = info.FullName + "\\";
-
-                // アプリアイコン保存用フォルダを作成
-                info = Directory.CreateDirectory(App_Data_Path + "App_Picture");
-
-                // bat用のフォルダを作成
-                info = Directory.CreateDirectory(App_Data_Path + "bat");
-                bat_Path = info.FullName + "\\";
-
-                if (File.Exists(Setting_Main_FileName))
-                {
-                    Main_load();        // 設定を読み込む
-                }
-                else
-                {
-                    Main_init();        // 設定の初期化
-                }
+                Main_load();        // 設定を読み込む
             }
-            Setting_Main_Read = true;
+            else
+            {
+                Main_init();        // 設定の初期化
+            }
         }
-        public void Main_init()
+        private void Main_init()
         {
-            Setting.Main.scrcpy_path = App_Path + "scrcpy";
+            Setting.Main.Scrcpy_Path = App_Path + "scrcpy";
             Setting.Main.Device_List.Clear();
 
-            Setting.Main.Rec_path = App_Data_Path + "Capture";
+            Setting.Main.Rec_path = Rec_Path;
+
+            string DesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            Setting.Main.Screenshot_path = Path.Combine(DesktopPath, "UIscrcpy Screenshots");
+
             // プリセットの初期化
             Setting.Main.preset_list.Clear();
             string Preset_Name;
@@ -179,7 +202,7 @@ namespace UIscrcpy
             {
                 preset_item preset_Item = new preset_item();
                 Preset_Name = preset.FirstOrDefault(kvp => kvp.Value == i).Key;
-                preset_Item = Edit_Preset.Preset_Init(Preset_Name);
+                preset_Item = Form_Edit_Preset.Preset_Init(Preset_Name);
                 Setting.Main.preset_list.Add(preset_Item);
             }
         }
@@ -191,14 +214,8 @@ namespace UIscrcpy
             writer.Flush();
             writer.Close();
         }
-        public void Main_load()
+        private void Main_load()
         {
-            /*
-            FileStream load_Data = new FileStream(Setting_Main_FileName, FileMode.Open);
-            Main = (Main)Serializer_Main.Deserialize(load_Data);
-            load_Data.Close();
-            */
-
             try
             {
                 using (FileStream load_Data = new FileStream(Setting_Main_FileName, FileMode.Open))
@@ -206,32 +223,57 @@ namespace UIscrcpy
                     Main = (Main)Serializer_Main.Deserialize(load_Data);
                 }
             }
+            // 設定ファイルの読み込みに失敗したら、設定を初期化する
             catch
             {
                 Main_init();        // 設定の初期化
             }
         }
 
-        static public bool Command_File_Check()
+        // ScrcpyをUiscrcpyフォルダ下にコピーする
+        private void Scrcpy_Copy()
         {
-            if (!Directory.Exists(Setting.Main.scrcpy_path))
+            if (!Directory.Exists(App_Path + "scrcpy"))
             {
-                MessageBox.Show("[scrcpy]のフォルダが見つかりません。", "メッセージ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return false;
-            }
-            if (!File.Exists(Setting.Main.scrcpy_path + "\\adb.exe"))
-            {
-                MessageBox.Show("[adb.exe]のファイルが見つかりません。", "メッセージ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return false;
-            }
-            if (!File.Exists(Setting.Main.scrcpy_path + "\\scrcpy.exe"))
-            {
-                MessageBox.Show("[scrcpy.exe]のファイルが見つかりません。", "メッセージ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return false;
-            }
-            return true;
-        }
+                // scrcpy用のフォルダを作成
+                DirectoryInfo info;
+                info = Directory.CreateDirectory(App_Path + "scrcpy");
 
-        
+                CopyDirectory(".\\scrcpy", App_Path);
+            }
+        }
+        /// <summary>
+        /// ディレクトリをコピーする
+        /// </summary>
+        /// <param name="sourceDirName">コピーするディレクトリ</param>
+        /// <param name="destDirName">コピー先のディレクトリ</param>
+        public static void CopyDirectory(
+            string sourceDirName, string destDirName)
+        {
+            //コピー先のディレクトリがないときは作る
+            if (!System.IO.Directory.Exists(destDirName))
+            {
+                System.IO.Directory.CreateDirectory(destDirName);
+                //属性もコピー
+                System.IO.File.SetAttributes(destDirName,
+                    System.IO.File.GetAttributes(sourceDirName));
+            }
+
+            //コピー先のディレクトリ名の末尾に"\"をつける
+            if (destDirName[destDirName.Length - 1] !=
+                    System.IO.Path.DirectorySeparatorChar)
+                destDirName = destDirName + System.IO.Path.DirectorySeparatorChar;
+
+            //コピー元のディレクトリにあるファイルをコピー
+            string[] files = System.IO.Directory.GetFiles(sourceDirName);
+            foreach (string file in files)
+                System.IO.File.Copy(file,
+                    destDirName + System.IO.Path.GetFileName(file), true);
+
+            //コピー元のディレクトリにあるディレクトリについて、再帰的に呼び出す
+            string[] dirs = System.IO.Directory.GetDirectories(sourceDirName);
+            foreach (string dir in dirs)
+                CopyDirectory(dir, destDirName + System.IO.Path.GetFileName(dir));
+        }
     }
 }
