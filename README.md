@@ -3,16 +3,16 @@ This software allows you to operate your smartphone (Android) screen from your P
 This software is a support software to operate the original scrcpy "https://scrcpy.org" with GUI.  
   
 # Operation screen  
-
+![Image](https://github.com/user-attachments/assets/94c62f6c-94af-48d0-b4f6-7f6f10f8660f)  
   　
-# Feature 
-Since scrcpy is based on command operation, it is a little difficult to understand the operation, and I felt that it is a little hard to use it comfortably.  
-Therefore, we created our own support software that can be operated intuitively with GUI.  
+# Feature    
+Since scrcpy is based on command operation, its operation is somewhat difficult to understand, and I felt that it is a bit hard to use it comfortably.  
+Therefore, we created our own support software that can be operated intuitively with GUI.   
   
-# Operating conditions 
-・Windows11 64Bit 
-・.NET8.0 or higher 
-・Environment where scrcpy is installed
+# operating conditions  
+・Windows11 64Bit  
+・NET 8.0 and above  
+・Environment with scrcpy installed  
   
 # How to install 
 Download the latest UIscrcpy.zip from and extract it to an appropriate location.  

@@ -198,6 +198,7 @@ namespace UIscrcpy
                         Msg = Lng.ini["Msg", "この端末は既に登録されています。"];
                         mbox = new MBox(Lng.ini["Msg", "メッセージ"], "WARNING", Msg, "OK", "OK");
                         mbox.ShowDialog();
+                        this.Close();
                         break;
                     }
 
@@ -285,7 +286,7 @@ namespace UIscrcpy
         {
             Action action = () =>
             {
-                Form_Waiting_Command connect_Device = new Form_Waiting_Command("Reg");
+                
                 if (isopen)
                 {
                     connect_Device.Close();
