@@ -3,8 +3,9 @@
 このソフトは、本家scrcpy  ”https://scrcpy.org"  をGUIで操作する為の支援ソフトとなっております。  
   
 # 動作画面  
+<img width="359" alt="Image" src="https://github.com/user-attachments/assets/f05b1053-ffbc-4534-a30b-7b4dd3fc05c0" /> 
 
-  　
+ 　
 # 特徴    
 scrcpyはコマンド操作が基本であるため操作がやや分かりずらく、気楽に使うのには少々ハードルが高いように感じました。  
 そこでGUIで直感的に操作できる支援ソフトを自作してみました。  
