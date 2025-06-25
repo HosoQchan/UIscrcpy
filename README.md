@@ -3,7 +3,7 @@ This software allows you to operate your smartphone (Android) screen from your P
 This software is a support software to operate the original scrcpy "https://scrcpy.org" with GUI.  
   
 # Operation screen  
-<img width="359" alt="Image" src="https://github.com/user-attachments/assets/3ebcde72-10fc-4a15-91ad-a510f4be019c" />
+<img width="359" alt="Image" src="https://github.com/user-attachments/assets/3ebcde72-10fc-4a15-91ad-a510f4be019c" /> 
   　
 # Feature    
 Since scrcpy is based on command operation, its operation is somewhat difficult to understand, and I felt that it is a bit hard to use it comfortably.  
