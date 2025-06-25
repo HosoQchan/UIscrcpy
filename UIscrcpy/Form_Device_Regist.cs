@@ -297,7 +297,15 @@ namespace UIscrcpy
                 else
                 {
                     Hide();
-                    connect_Device.Show();
+                    if((connect_Device != null) && (!connect_Device.IsDisposed))
+                    {
+                        connect_Device.Show();
+                    }
+                    else
+                    {
+                        connect_Device = new Form_Waiting_Command("Reg");
+                        connect_Device.Show();
+                    }
                 }
             };
             Invoke(action);
