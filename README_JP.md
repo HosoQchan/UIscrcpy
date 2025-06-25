@@ -5,7 +5,9 @@
 # 動作画面  
 <img width="359" alt="Image" src="https://github.com/user-attachments/assets/f05b1053-ffbc-4534-a30b-7b4dd3fc05c0" /> 
 
- 　
+ 
+<img width="359" alt="Image" src="https://github.com/user-attachments/assets/7c7e94c4-6ea4-4ea0-8009-98ff4c53ab47" /> 
+
 # 特徴    
 scrcpyはコマンド操作が基本であるため操作がやや分かりずらく、気楽に使うのには少々ハードルが高いように感じました。  
 そこでGUIで直感的に操作できる支援ソフトを自作してみました。  
