@@ -4,8 +4,7 @@ This software is a support software to operate the original scrcpy "https://scrc
   
 # Operation screen  
 <img width="359" alt="Image" src="https://github.com/user-attachments/assets/3ebcde72-10fc-4a15-91ad-a510f4be019c" /> 
-![Image](https://github.com/user-attachments/assets/7c7e94c4-6ea4-4ea0-8009-98ff4c53ab47) 
-
+<img width="359" alt="Image" src="https://github.com/user-attachments/assets/7c7e94c4-6ea4-4ea0-8009-98ff4c53ab47" /> 
 
 # Feature    
 Since scrcpy is based on command operation, its operation is somewhat difficult to understand, and I felt that it is a bit hard to use it comfortably.  
